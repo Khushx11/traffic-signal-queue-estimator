@@ -60,3 +60,34 @@ resolution degradation and a solid occlusion strip. They do not establish
 performance in natural night scenes, rain, glare or real occlusion.
 These are frame-level vehicle detections. Queue membership and signal timing
 require their own independent reference labels.
+
+## Results and model choice
+
+Fine-tuning used 240 images across eight training videos and 28 validation
+images across seven different videos. The TrafficCAM test contains 204
+images across 51 other videos, including one byte-identical pair inside the
+test split. No exact images were shared across any splits. Training ran for
+five epochs on the Apple M4 CPU.
+
+- **TrafficCAM original**. Recall improved from 22.6% to 46.3%, small-object
+  recall from 15.4% to 41.1%, and count MAE from 17.24 to 9.91 vehicles per
+  frame. Precision fell from 76.6% to 45.7%. The fine-tuned model also
+  improved recall and count MAE under all four simulated degradations.
+- **MIO-TCD original**. Recall rose from 49.4% to 58.9%, while precision fell
+  from 79.7% to 41.6% and count MAE rose from 1.30 to 2.20. Across simulated
+  degradations the fine-tuned model improved recall in every tested case,
+  while count MAE worsened in three of four cases.
+- **Peachtree transfer diagnostic**. On the same 120 cropped frames, the
+  baseline had tracked vehicles in 176 of 240 lane-timestamps and abstained
+  on all 240. Fine-tuning produced tracks in all 240 and returned six count
+  estimates, 82 lower bounds and 152 uncertain outputs. This clip still
+  lacks an independent lane-queue reference.
+
+Keep the pretrained checkpoint as the general default. The fine-tuned model
+is available locally as `runs/trafficcam-final/weights/best.pt` and can be
+passed explicitly to the CLI for diagnostics. It has a single vehicle class,
+so class-dependent heavy-vehicle handling is unavailable with that checkpoint.
+
+- [Raw aggregate test metrics](../results/detector-robustness.json)
+- [Training and validation history](../results/detector-training.json)
+- [Peachtree transfer diagnostics](../results/peachtree-detector-transfer.json)

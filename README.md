@@ -66,6 +66,19 @@ after verifying alignment. A phase file maps each lane to an object with a
 `time` in seconds and `phase` set to red, amber, green or null. No phase is
 shown before the first event.
 
+## Detector robustness experiment
+
+[Reproduce the TrafficCAM fine-tuning and MIO-TCD evaluation](docs/detector-robustness.md).
+TrafficCAM fine-tuning cut in-domain frame-count MAE from **17.24 to 9.91**,
+but raised external MIO-TCD MAE from **1.30 to 2.20**. The general default
+remains the pretrained checkpoint. These metrics measure vehicles in frames.
+Signal-cycle queue accuracy still needs an independently aligned reference.
+
+The experiment adds a supervised fixed-camera detector candidate and tests
+separate camera footage, small vehicles, and controlled blur, darkness,
+resolution loss and occlusion. The [sampled image IDs](results/detector-split-manifest.json)
+and [archive hashes](data/detection-benchmark-assets.json) record the data used.
+
 ## Evaluation and tests
 
 ```sh
