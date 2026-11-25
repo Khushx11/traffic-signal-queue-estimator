@@ -34,7 +34,7 @@ function render() {
   const maxTime = Number(seek.max);
   const now = Number(seek.value);
   const showReference = element("reference").checked;
-  const ceiling = Math.max(1, ...rows.map(row => Math.max(row.count ?? 0, showReference ? row.reference ?? 0 : 0)));
+  const ceiling = rows.reduce((max, row) => Math.max(max, row.count ?? 0, showReference ? row.reference ?? 0 : 0), 1);
   const x = (s) => 40 + s / maxTime * (chart.width - 58);
   const y = (n) => 225 - n / ceiling * 188;
   context.clearRect(0, 0, chart.width, chart.height);
@@ -170,3 +170,30 @@ async function loadSample() {
 }
 
 loadSample();
+
+element("analyze").addEventListener("click", async () => {
+  const button = element("analyze");
+  const videoFile = element("recording-file").files[0];
+  const configFile = element("camera-config").files[0];
+  const status = element("status");
+  if (!videoFile || !configFile) {
+    status.textContent = "Choose a local recording and its camera configuration.";
+    return;
+  }
+  button.disabled = true;
+  status.textContent = "Analysing the recording locally…";
+  try {
+    const camera = JSON.stringify(JSON.parse(await configFile.text()));
+    const response = await fetch("/analyze", {method: "POST", headers: {"X-Camera-Config": encodeURIComponent(camera)}, body: videoFile});
+    if (!response.ok) throw new Error("Analysis failed. Check the local server, video and camera configuration.");
+    const rows = await response.json();
+    if (videoFile === element("recording-file").files[0]) {
+      load(rows, "Local inference · " + videoFile.name);
+      status.textContent = "Analysis complete.";
+    }
+  } catch (error) {
+    status.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+});

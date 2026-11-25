@@ -26,3 +26,21 @@ test("loads sample, imports a recording and predictions, seeks and exports", asy
     else expect(JSON.parse(text)).toHaveLength(8);
   }
 });
+
+test("submits the selected recording and camera then loads the analysis", async ({page}) => {
+  await page.route("**/analyze", async route => {
+    expect(route.request().method()).toBe("POST");
+    expect(JSON.parse(decodeURIComponent(route.request().headers()["x-camera-config"])).lanes).toEqual([]);
+    expect(route.request().postDataBuffer().length).toBeGreaterThan(100);
+    await route.fulfill({json: [{time: 0, lane: "A", state: "estimate", count: 3}]});
+  });
+  await page.goto("/");
+  await expect(page.locator("#source")).toContainText("Synthetic signal cycle");
+  await page.locator("#recording-file").setInputFiles(path.join(__dirname, "../web/illustrative-cycle.mp4"));
+  await page.locator("#camera-config").setInputFiles({
+    name: "camera.json", mimeType: "application/json", buffer: Buffer.from('{"lanes":[]}'),
+  });
+  await page.getByRole("button", {name: "Run local inference"}).click();
+  await expect(page.getByRole("status")).toHaveText("Analysis complete.");
+  await expect(page.locator("#readout")).toContainText("3 vehicles");
+});
