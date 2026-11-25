@@ -137,3 +137,11 @@ and pass its local path to `scripts/infer.py --weights` or
 `b62898ebf38940ca4df323863e45ee9d84a1a46d5d11ebdde529fb33aa9f3a32`.
 ByteTrack uses the oriented detections and the app displays their enclosing
 rectangles. The broader-view checkpoint remains the general default.
+
+## Fixed traffic-signal camera dataset
+
+The [roadside data guide](docs/roadside-camera-data.md) registers real fixed RGB
+camera footage from the US DOT Intersection Safety Challenge, along with
+frame clocks, scenario ground truth and a signal-phase capture where available.
+It also lists operating-intersection alternatives. The controlled US DOT
+scenarios are a separate test domain from the FHWA rooftop videos.

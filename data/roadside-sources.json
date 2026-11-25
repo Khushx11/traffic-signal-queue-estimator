@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "name": "US DOT Intersection Safety Challenge Stage 1B validation sample",
+      "catalogue": "https://data.transportation.gov/Roadways-and-Bridges/Intersection-Safety-Challenge-Stage-1B-Validation-/j58q-ymi4",
+      "archive": "https://data.transportation.gov/api/views/j58q-ymi4/files/fd881af7-f358-4f92-b407-2be5fd3bb851?download=true",
+      "view": "fixed infrastructure camera, controlled signalised intersection",
+      "members": [
+        "Validation Data Sample/Run_1003/VisualCamera6_Run_1003.mp4",
+        "Validation Data Sample/Run_1003/VisualCamera6_Run_1003_frame-timing.csv",
+        "Validation Data Sample/Run_1003/ISC_Run_1003_ISC_all_timing.csv",
+        "Validation Data Sample/Run_1003/Run_1003_GT.csv",
+        "Validation Data Sample/Run_1023/VisualCamera6_Run_1023.mp4",
+        "Validation Data Sample/Run_1023/VisualCamera6_Run_1023_frame-timing.csv",
+        "Validation Data Sample/Run_1023/V2XHubSPaT_Run_1023.pcap",
+        "Validation Data Sample/Run_1023/Run_1023_GT.csv"
+      ]
+    },
+    {
+      "name": "Aalborg University Multi-view Traffic Intersection Dataset",
+      "catalogue": "https://vap.aau.dk/mtid/",
+      "view": "pole camera with synchronised drone reference",
+      "access": "Publisher-linked Kaggle API download returned HTTP 404 during the pilot"
+    },
+    {
+      "name": "TUMTraf Intersection",
+      "catalogue": "https://innovation-mobility.com/en/project-providentia/a9-dataset/",
+      "view": "fixed roadside gantry cameras with synchronised LiDAR",
+      "access": "Publisher registration"
+    }
+  ]
+}
