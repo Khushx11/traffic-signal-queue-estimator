@@ -7,7 +7,7 @@ from pathlib import Path
 import cv2
 from ultralytics import YOLO
 
-VEHICLES = {"vehicle", "car", "motorcycle", "bus", "truck"}
+VEHICLES = {"vehicle", "car", "motorcycle", "bus", "truck", "small vehicle", "large vehicle"}
 
 
 def iou(a, b):
@@ -54,8 +54,9 @@ def evaluate(model, root, split):
                  (480 / max(width, height)) ** 2 < 32 ** 2}
         for condition, frame in variants(image):
             result = model.predict(frame, imgsz=480, conf=0.25, device="cpu", verbose=False)[0]
-            predictions = sorted(zip(result.boxes.conf.tolist(), result.boxes.cls.int().tolist(),
-                                     result.boxes.xyxy.tolist()), reverse=True)
+            detections = result.obb if model.task == "obb" else result.boxes
+            predictions = sorted(zip(detections.conf.tolist(), detections.cls.int().tolist(),
+                                     detections.xyxy.tolist()), reverse=True)
             boxes = [box for _, label, box in predictions if result.names[label] in VEHICLES]
             tp = matches(boxes, targets)
             t = totals[condition]
@@ -76,6 +77,8 @@ def main():
     parser.add_argument("output", type=Path)
     parser.add_argument("checkpoints", nargs="+", type=Path)
     args = parser.parse_args()
+    if len({path.stem for path in args.checkpoints}) != len(args.checkpoints):
+        parser.error("Checkpoints must have distinct filenames")
     results = {}
     for checkpoint in args.checkpoints:
         model = YOLO(str(checkpoint))

@@ -66,7 +66,7 @@ def trafficcam(root, images, splits, per_video, train_per_video):
                     write_example(root, split, video + "_" + Path(path).name, archive.read(path + ".jpg"), boxes)
 
 
-def mio(root, images, toolkit, limit):
+def mio(root, images, toolkit, limit, extra_train=0):
     with tarfile.open(toolkit) as archive:
         content = archive.extractfile("MIO-TCD-Localization-Code/gt_train.csv")
         labels = defaultdict(list)
@@ -75,15 +75,19 @@ def mio(root, images, toolkit, limit):
                 labels[name].append(tuple(map(int, bounds)))
     with tarfile.open(images, mode="r|") as archive:
         count = 0
+        seen = set()
         for member in archive:
             name = Path(member.name)
-            if name.parent.name == "train" and name.suffix == ".jpg" and name.stem in labels:
-                write_example(root, "external", name.stem, archive.extractfile(member).read(), labels[name.stem])
+            if name.parent.name == "train" and name.suffix == ".jpg" and name.stem in labels and name.stem not in seen:
+                seen.add(name.stem)
+                split = "external" if count < limit else "train"
+                write_example(root, split, "mio_" + name.stem if split == "train" else name.stem,
+                              archive.extractfile(member).read(), labels[name.stem])
                 count += 1
-                if count == limit:
+                if count == limit + extra_train:
                     break
-    if count != limit:
-        raise ValueError(f"Expected {limit} labelled MIO images, found {count}")
+    if count != limit + extra_train:
+        raise ValueError(f"Expected {limit + extra_train} labelled MIO images, found {count}")
 
 
 def main():
@@ -93,7 +97,10 @@ def main():
     parser.add_argument("--mio", nargs=2, type=Path)
     parser.add_argument("--per-video", type=int, default=4)
     parser.add_argument("--train-per-video", type=int, default=12)
+    parser.add_argument("--mio-train", type=int, default=0, help="Add labelled frames after the reserved external slice")
     args = parser.parse_args()
+    if args.mio_train < 0 or (args.mio_train and not args.mio):
+        parser.error("--mio-train requires --mio and a nonnegative count")
     if min(args.per_video, args.train_per_video) < 1 or args.output.exists():
         parser.error("Supply a positive sample count and a new output folder")
     root = args.output.resolve()
@@ -103,7 +110,7 @@ def main():
             (root / folder / split).mkdir(parents=True)
     trafficcam(root, *args.trafficcam, args.per_video, args.train_per_video)
     if args.mio:
-        mio(root, *args.mio, 80)
+        mio(root, *args.mio, 80, args.mio_train)
     (root / "dataset.yaml").write_text(f"path: {json.dumps(str(root))}\ntrain: images/train\nval: images/val\ntest: images/test\nnames: {{0: vehicle}}\n")
     manifest = {split: sorted(p.stem for p in (root / "images" / split).glob("*.jpg")) for split in splits}
     if any(not images for images in manifest.values()):
