@@ -53,6 +53,7 @@ test("mobile navigation reaches the queue controls without horizontal scrolling"
   await page.getByRole("link", {name: "Open queue replay"}).click();
   await expect(page).toHaveURL(/#analysis$/);
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  await expect(page.locator("#source")).toContainText("Synthetic signal cycle");
   const slider = page.getByRole("slider", {name: "Playback position"});
   await slider.focus();
   await slider.press("End");
