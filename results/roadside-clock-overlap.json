@@ -1,0 +1,16 @@
+{
+  "1003": {
+    "timezone_assumption": "America/New_York",
+    "timestamped_frames": 1937,
+    "camera_span_seconds": 73.093,
+    "reference_rows": 758,
+    "reference_rows_in_camera_time_range": 730
+  },
+  "1023": {
+    "timezone_assumption": "America/New_York",
+    "timestamped_frames": 1669,
+    "camera_span_seconds": 61.513,
+    "reference_rows": 636,
+    "reference_rows_in_camera_time_range": 614
+  }
+}

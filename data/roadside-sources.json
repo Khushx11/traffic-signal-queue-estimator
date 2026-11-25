@@ -15,7 +15,15 @@
         "Validation Data Sample/Run_1023/VisualCamera6_Run_1023_frame-timing.csv",
         "Validation Data Sample/Run_1023/V2XHubSPaT_Run_1023.pcap",
         "Validation Data Sample/Run_1023/Run_1023_GT.csv"
-      ]
+      ],
+      "sha256": {
+        "ISC_Run_1003_ISC_all_timing.csv": "5e79b8692cc25bf21d4c3a4f3dfd1fb72b36a719b76c15df57311c0be5eda443",
+        "Run_1003_GT.csv": "cf18980062247eb9a5df151b0f453c5947672be26ffa4fad1e83c598def6ceb9",
+        "Run_1023_GT.csv": "7165d69266784d7eef285597235e0e539b911f2bba63daf3f5fd63424b682ff8",
+        "V2XHubSPaT_Run_1023.pcap": "893b67b7b8a823f396badad53b8a742541906ab8f92e115bfd9e52da2a836024",
+        "VisualCamera6_Run_1003_frame-timing.csv": "64a3027af7d209be3f7d4336da1e4cc8b42b562c86401f8fa3f750a2d352cc41",
+        "VisualCamera6_Run_1023_frame-timing.csv": "40e1c8baefc583239b5c605e081bc1ed8dc4e95af8fc0d0561b60250bd5830f8"
+      }
     },
     {
       "name": "Aalborg University Multi-view Traffic Intersection Dataset",
