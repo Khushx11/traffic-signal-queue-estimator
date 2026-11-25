@@ -25,3 +25,9 @@ time in seconds, split, verified cycle identifier when available, phase,
 occlusion category and integer reference count or null. Save timestamps for
 cross-view checks and the evidence behind corrections. If cycles are scored,
 use complete audited intervals and define the sampling cadence in the manifest.
+
+For cycle peak scoring, attach the same integer `cycle_start_ms`, exclusive
+`cycle_end_ms`, and positive `cycle_step_ms` to every row in a lane cycle.
+Two or more expected sample timestamps must all be present exactly once, with
+a reference count and an estimate at each timestamp. Derive the bounds from
+independently verified phase transitions.

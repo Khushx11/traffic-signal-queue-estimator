@@ -17,4 +17,7 @@ class BenchmarkJoinTests(unittest.TestCase):
             dict(recording="video", lane="a", cycle=1, reference=3, state="estimate", count=2),
             dict(recording="video", lane="b", cycle=1, reference=5, state="uncertain", count=None),
         ]
+        for time, row in zip((0, 1, 0), rows):
+            row.update(time=time, cycle_start_ms=0, cycle_end_ms=2000, cycle_step_ms=1000)
+        self.assertEqual(cycle_peaks(rows[:1])["scored_cycles"], 0)
         self.assertEqual(cycle_peaks(rows), {"cycles": 2, "scored_cycles": 1, "mae": 1})

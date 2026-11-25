@@ -4,10 +4,10 @@
     "without_recovery": {
       "score": {
         "eligible": 8,
-        "estimated": 7,
-        "coverage": 0.875,
-        "mae": 0.14285714285714285,
-        "bias": -0.14285714285714285,
+        "estimated": 6,
+        "coverage": 0.75,
+        "mae": 0,
+        "bias": 0,
         "lower_bounds": 0,
         "invalid_lower_bounds": 0
       },
@@ -15,40 +15,40 @@
         {
           "threshold": 0,
           "eligible": 8,
-          "estimated": 7,
-          "coverage": 0.875,
-          "mae": 0.14285714285714285,
-          "bias": -0.14285714285714285,
+          "estimated": 6,
+          "coverage": 0.75,
+          "mae": 0,
+          "bias": 0,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         },
         {
           "threshold": 0.5,
           "eligible": 8,
-          "estimated": 7,
-          "coverage": 0.875,
-          "mae": 0.14285714285714285,
-          "bias": -0.14285714285714285,
+          "estimated": 6,
+          "coverage": 0.75,
+          "mae": 0,
+          "bias": 0,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         },
         {
           "threshold": 0.75,
           "eligible": 8,
-          "estimated": 7,
-          "coverage": 0.875,
-          "mae": 0.14285714285714285,
-          "bias": -0.14285714285714285,
+          "estimated": 6,
+          "coverage": 0.75,
+          "mae": 0,
+          "bias": 0,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         },
         {
           "threshold": 1,
           "eligible": 8,
-          "estimated": 7,
-          "coverage": 0.875,
-          "mae": 0.14285714285714285,
-          "bias": -0.14285714285714285,
+          "estimated": 0,
+          "coverage": 0.0,
+          "mae": null,
+          "bias": null,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         }
@@ -64,7 +64,7 @@
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 1,
@@ -78,7 +78,7 @@
           ],
           "recovered_ids": [],
           "tail_distance": 6.5,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 2,
@@ -93,7 +93,7 @@
           ],
           "recovered_ids": [],
           "tail_distance": 13.5,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 3,
@@ -108,7 +108,7 @@
           ],
           "recovered_ids": [],
           "tail_distance": 13.5,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 3.5,
@@ -127,12 +127,12 @@
           "lane": "approach",
           "phase": "green",
           "reference": 1,
-          "state": "estimate",
-          "count": 0,
+          "state": "uncertain",
+          "count": null,
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.0
         },
         {
           "time": 5,
@@ -144,7 +144,7 @@
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 6,
@@ -156,17 +156,17 @@
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.85
         }
       ]
     },
     "with_recovery": {
       "score": {
         "eligible": 8,
-        "estimated": 8,
-        "coverage": 1.0,
-        "mae": 0.125,
-        "bias": -0.125,
+        "estimated": 7,
+        "coverage": 0.875,
+        "mae": 0,
+        "bias": 0,
         "lower_bounds": 0,
         "invalid_lower_bounds": 0
       },
@@ -174,40 +174,40 @@
         {
           "threshold": 0,
           "eligible": 8,
-          "estimated": 8,
-          "coverage": 1.0,
-          "mae": 0.125,
-          "bias": -0.125,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0,
+          "bias": 0,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         },
         {
           "threshold": 0.5,
           "eligible": 8,
-          "estimated": 8,
-          "coverage": 1.0,
-          "mae": 0.125,
-          "bias": -0.125,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0,
+          "bias": 0,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         },
         {
           "threshold": 0.75,
           "eligible": 8,
-          "estimated": 7,
-          "coverage": 0.875,
-          "mae": 0.14285714285714285,
-          "bias": -0.14285714285714285,
+          "estimated": 6,
+          "coverage": 0.75,
+          "mae": 0,
+          "bias": 0,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         },
         {
           "threshold": 1,
           "eligible": 8,
-          "estimated": 7,
-          "coverage": 0.875,
-          "mae": 0.14285714285714285,
-          "bias": -0.14285714285714285,
+          "estimated": 0,
+          "coverage": 0.0,
+          "mae": null,
+          "bias": null,
           "lower_bounds": 0,
           "invalid_lower_bounds": 0
         }
@@ -223,7 +223,7 @@
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 1,
@@ -237,7 +237,7 @@
           ],
           "recovered_ids": [],
           "tail_distance": 6.5,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 2,
@@ -252,7 +252,7 @@
           ],
           "recovered_ids": [],
           "tail_distance": 13.5,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 3,
@@ -267,7 +267,7 @@
           ],
           "recovered_ids": [],
           "tail_distance": 13.5,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 3.5,
@@ -290,12 +290,12 @@
           "lane": "approach",
           "phase": "green",
           "reference": 1,
-          "state": "estimate",
-          "count": 0,
+          "state": "uncertain",
+          "count": null,
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.0
         },
         {
           "time": 5,
@@ -307,7 +307,7 @@
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.85
         },
         {
           "time": 6,
@@ -319,7 +319,7 @@
           "visible_ids": [],
           "recovered_ids": [],
           "tail_distance": null,
-          "confidence": 1.0
+          "confidence": 0.85
         }
       ]
     }

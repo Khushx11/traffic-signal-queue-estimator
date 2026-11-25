@@ -29,5 +29,9 @@ class QueueStateTests(unittest.TestCase):
     def test_green_discharge_clears_moving_tracks(self):
         estimator = QueueEstimator({"north": 30}, dwell=0)
         estimator.update(0, [Observation(1, "north", 2, 0)])
-        lane = estimator.update(1, [Observation(1, "north", 1, 4)])["north"]
+        lane = estimator.update(1, [Observation(1, "north", 1, 4)], observed_empty=["north"])["north"]
         self.assertEqual(lane["count"], 0)
+
+    def test_missing_detection_evidence_is_uncertain(self):
+        lane = QueueEstimator({"north": 30}).update(0, [])["north"]
+        self.assertEqual((lane["state"], lane["count"]), ("uncertain", None))

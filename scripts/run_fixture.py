@@ -17,7 +17,8 @@ def run(scenario, recovery):
     for frame in scenario["frames"]:
         observations = [Observation(identity, lane, distance, speed)
                         for identity, distance, speed in frame["tracks"]]
-        state = estimator.update(frame["time"], observations, [lane] if frame.get("obscured") else [])
+        state = estimator.update(frame["time"], observations, [lane] if frame.get("obscured") else [],
+                                 observed_empty=[lane] if frame.get("observed_empty") else [])
         rows.append({"time": frame["time"], "lane": lane, "phase": frame["phase"],
                      "reference": frame["reference"], **state[lane]})
     return rows

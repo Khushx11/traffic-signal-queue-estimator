@@ -25,3 +25,19 @@ per second. It produced 1,800 lane-timestamp rows across two lanes. The
 prototype issued an estimate for 1,758 rows and marked 42 uncertain. These
 are counts of output states before any accuracy audit. In particular, the
 high estimate coverage does not validate the confidence heuristic.
+
+## Audit follow-up
+
+Reviewing the saved outputs showed that every issued estimate in the original
+900-frame run was zero. The decoded approach contains stopped vehicles.
+That run remains useful for timing only.
+
+The revised estimator abstains when there is no evidence for a zero. A causal
+longitudinal speed estimate smooths short-term detector jitter. On 120
+Peachtree frames, full-frame inference produced tracks on 143 of 240
+lane-timestamps. Approach cropping produced tracks on 176. Both variants
+abstained on all 240. Longer diagnostic traces include stable slow vehicles
+roughly 29–34 nominal metres upstream and intermittent tracks near the stop
+line. The estimator cannot establish a continuous queue from those tracks.
+Ground dimensions are approximate. These diagnostic frames should be
+excluded from any future frozen test split if they guide tuning.

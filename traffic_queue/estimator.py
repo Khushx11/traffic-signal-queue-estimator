@@ -32,7 +32,7 @@ class QueueEstimator:
         self.previous_queue = set()
         self.previous_time = None
 
-    def update(self, timestamp, observations, obscured=()):
+    def update(self, timestamp, observations, obscured=(), observed_empty=()):
         if self.previous_time is not None and timestamp <= self.previous_time:
             raise ValueError("Timestamps must be strictly increasing")
         observations = tuple(observations)
@@ -40,6 +40,7 @@ class QueueEstimator:
         if len(visible) != len(observations):
             raise ValueError("Duplicate track ID in frame")
         obscured = set(obscured)
+        observed_empty = set(observed_empty)
         self.previous_time = timestamp
         for identity, observation in visible.items():
             old = self.tracks.get(identity)
@@ -75,19 +76,19 @@ class QueueEstimator:
                     continue
                 if item.distance - rear > self.max_gap:
                     break
-                rear = item.distance + item.length
+                rear = max(rear, item.distance + item.length)
                 queued.add(item.id)
                 (recovered_ids if carried else seen_ids).append(item.id)
             state = "estimate"
             count = len(seen_ids) + len(recovered_ids)
             if seen_ids and rear >= limit - self.tail_margin:
                 state, count = "lower_bound", len(seen_ids)
-            elif lane in obscured and not recovered_ids:
+            elif (lane in obscured and not recovered_ids) or (not count and lane not in observed_empty):
                 state, count = "uncertain", None
             result[lane] = {
                 "state": state, "count": count, "visible_ids": seen_ids,
                 "recovered_ids": recovered_ids, "tail_distance": rear if seen_ids or recovered_ids else None,
-                "confidence": 0.65 if recovered_ids else (1.0 if state == "estimate" else 0.0),
+                "confidence": (0.65 if recovered_ids else 0.85) if state == "estimate" else 0.0,
             }
         self.previous_queue = queued
         return result

@@ -52,6 +52,19 @@ def cycle_peaks(rows):
             groups[row["recording"], row["lane"], row["cycle"]].append(row)
     errors = []
     for group in groups.values():
+        clocks = {tuple(row.get(field) for field in ("cycle_start_ms", "cycle_end_ms", "cycle_step_ms"))
+                  for row in group}
+        if len(clocks) != 1:
+            continue
+        start, end, step = clocks.pop()
+        if any(type(value) is not int for value in (start, end, step)):
+            continue
+        stamps = sorted(round(row["time"] * 1000) for row in group)
+        if step <= 0 or end <= start or len(stamps) < 2:
+            continue
+        expected = range(start, end, step)
+        if len(stamps) != len(expected) or any(a != b for a, b in zip(stamps, expected)):
+            continue
         if all(row["reference"] is not None and row["state"] == "estimate" for row in group):
             errors.append(max(row["count"] for row in group) - max(row["reference"] for row in group))
     return {"cycles": len(groups), "scored_cycles": len(errors),

@@ -9,7 +9,7 @@
     "visible_ids": [],
     "recovered_ids": [],
     "tail_distance": null,
-    "confidence": 1.0,
+    "confidence": 0.85,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   },
@@ -25,7 +25,7 @@
     ],
     "recovered_ids": [],
     "tail_distance": 6.5,
-    "confidence": 1.0,
+    "confidence": 0.85,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   },
@@ -42,7 +42,7 @@
     ],
     "recovered_ids": [],
     "tail_distance": 13.5,
-    "confidence": 1.0,
+    "confidence": 0.85,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   },
@@ -59,7 +59,7 @@
     ],
     "recovered_ids": [],
     "tail_distance": 13.5,
-    "confidence": 1.0,
+    "confidence": 0.85,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   },
@@ -86,12 +86,12 @@
     "lane": "approach",
     "phase": "green",
     "reference": 1,
-    "state": "estimate",
-    "count": 0,
+    "state": "uncertain",
+    "count": null,
     "visible_ids": [],
     "recovered_ids": [],
     "tail_distance": null,
-    "confidence": 1.0,
+    "confidence": 0.0,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   },
@@ -105,7 +105,7 @@
     "visible_ids": [],
     "recovered_ids": [],
     "tail_distance": null,
-    "confidence": 1.0,
+    "confidence": 0.85,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   },
@@ -119,7 +119,7 @@
     "visible_ids": [],
     "recovered_ids": [],
     "tail_distance": null,
-    "confidence": 1.0,
+    "confidence": 0.85,
     "phase_source": "synthetic fixture",
     "model": "queue-state-recovery"
   }
