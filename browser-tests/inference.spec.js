@@ -22,9 +22,11 @@ test("runs actual inference via the local upload endpoint", async ({page}) => {
   await page.getByRole("button", {name: "Run local inference"}).click();
   const response = await result;
   expect(response.ok()).toBeTruthy();
-  const rows = await response.json();
+  await expect(page.getByRole("status")).toHaveText("Analysis complete.", {timeout: 60000});
+  const download = page.waitForEvent("download");
+  await page.getByRole("button", {name: "Export JSON"}).click();
+  const rows = JSON.parse(await require("node:fs/promises").readFile(await (await download).path(), "utf8"));
   expect(rows.length).toBeGreaterThan(1);
   expect(rows[0]).toMatchObject({lane: "fixture", recording: "local-upload", time: 0});
   expect(rows.every(row => row.count === null || Number.isInteger(row.count))).toBe(true);
-  await expect(page.getByRole("status")).toHaveText("Analysis complete.");
 });

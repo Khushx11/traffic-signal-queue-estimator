@@ -9,6 +9,7 @@ const lane = element("lane");
 const seek = element("seek");
 let records = [];
 let objectUrl;
+let pendingSeek;
 
 function load(rows, label) {
   if (!Array.isArray(rows) || !rows.length || rows.some(row =>
@@ -95,7 +96,11 @@ function paintOverlay(row) {
 
 function move(time) {
   seek.value = time;
-  if (Number.isFinite(video.duration)) video.currentTime = Math.min(Number(seek.value), video.duration);
+  if (Number.isFinite(video.duration) && video.readyState >= 1) {
+    video.currentTime = Math.min(Number(seek.value), video.duration);
+  } else {
+    pendingSeek = Number(seek.value);
+  }
   render();
 }
 
@@ -122,6 +127,7 @@ element("recording-file").addEventListener("change", event => {
   if (!file) return;
   if (objectUrl) URL.revokeObjectURL(objectUrl);
   objectUrl = URL.createObjectURL(file);
+  pendingSeek = undefined;
   video.src = objectUrl;
   element("placeholder").hidden = true;
   element("status").textContent = "Local video loaded. Import predictions for this recording to compare.";
@@ -143,7 +149,19 @@ element("predictions").addEventListener("change", async event => {
     element("status").textContent = error.message;
   }
 });
-video.addEventListener("timeupdate", () => { seek.value = video.currentTime; render(); });
+video.addEventListener("loadedmetadata", () => {
+  if (pendingSeek !== undefined) {
+    const time = pendingSeek;
+    pendingSeek = undefined;
+    move(time);
+  }
+});
+video.addEventListener("timeupdate", () => {
+  if (pendingSeek === undefined && !video.seeking) {
+    seek.value = video.currentTime;
+    render();
+  }
+});
 seek.addEventListener("input", () => move(Number(seek.value)));
 lane.addEventListener("change", render);
 element("reference").addEventListener("change", render);
