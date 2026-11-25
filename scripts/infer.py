@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from traffic_queue.estimator import Observation, QueueEstimator
 from traffic_queue.geometry import Lane, lane_at, project
 
-VEHICLE_CLASSES = {"car", "motorcycle", "bus", "truck"}
+VEHICLE_CLASSES = {"car", "motorcycle", "bus", "truck", "vehicle"}
 
 
 def main():
