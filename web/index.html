@@ -7,12 +7,33 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><h1>Traffic Signal Queue Estimator</h1><p id="source">Illustrative fixture · simulated counts</p><nav class="control-jumps" aria-label="Control room sections"><a href="#recording">Recording</a><a href="#analysis">Queue analysis</a><a href="#priority-heading">Service simulation</a></nav></header>
+<header class="masthead">
+  <a class="wordmark" href="./"><span class="signal-mark" aria-hidden="true"><i></i><i></i><i></i></span> Traffic Signal Queue Estimator</a>
+  <nav aria-label="Workspace sections"><a href="#recording">Camera</a><a href="#analysis">Queue replay</a><a href="#priority-heading">Signal simulation</a></nav>
+</header>
+<section class="hero" aria-labelledby="title">
+  <div class="hero-copy">
+    <h1 id="title">Read the queue.<br>Replay the signal.</h1>
+    <p>See where vehicles accumulate, check whether the count is supported by the recording, and explore which approach would get the next green.</p>
+    <a class="button primary" href="#analysis">Open queue replay <span aria-hidden="true">↓</span></a>
+  </div>
+  <div class="intersection" aria-hidden="true">
+    <div class="street street-horizontal"></div><div class="street street-vertical"></div>
+    <div class="junction"></div>
+    <div class="crossing crossing-west"></div><div class="crossing crossing-east"></div>
+    <div class="crossing crossing-north"></div><div class="crossing crossing-south"></div>
+    <div class="stop-line"></div>
+    <div class="car queue-one"></div><div class="car queue-two"></div><div class="car queue-three"></div>
+    <div class="car through-car"></div><div class="car north-car"></div>
+    <div class="illustration-signal"><i></i><i></i><i></i></div>
+  </div>
+</section>
+<div class="source-strip"><span class="source-label">Current replay</span><p id="source">Loading sample cycle…</p></div>
 <main>
-<section aria-labelledby="recording">
-<h2 id="recording">Camera recording</h2>
+<section class="work-panel camera-panel" aria-labelledby="recording">
+<h2 id="recording">Camera recording</h2><p class="panel-intro">Watch the frame at the selected playback time. Track outlines appear when the loaded data includes vehicle positions.</p>
 <div class="stage"><video id="video" controls playsinline aria-label="Intersection recording"></video><canvas id="overlay" aria-hidden="true"></canvas><div id="placeholder">Choose a local recording</div></div>
-<div class="inputs">
+<div class="import-zone"><h3>Use your own footage</h3><p>Load a recording and its predictions, or pair it with a camera configuration to run local inference.</p><div class="inputs">
 <label>Local recording <input id="recording-file" type="file" accept="video/*"></label>
 <label>Prediction JSON <input id="predictions" type="file" accept=".json,application/json"></label>
 </div>
@@ -35,29 +56,31 @@
 <button id="save-camera" type="button">Download camera JSON</button>
 </div>
 <p id="calibration-status" aria-live="polite"></p>
-</details>
+</details></div>
 </section>
-<section aria-labelledby="analysis">
-<h2 id="analysis">Queue by lane</h2>
+<section class="work-panel queue-panel" aria-labelledby="analysis">
+<h2 id="analysis">Queue by lane</h2><p class="panel-intro">Select a lane and scrub the timeline to compare counts with the camera.</p>
 <div class="inputs"><label>Lane <select id="lane"></select></label>
 <label><input id="reference" type="checkbox" checked> Reference counts</label></div>
+<div class="readout-grid"><p class="readout" id="readout">Waiting for queue data</p><span id="phase-state" class="phase-state" data-phase="unknown">Signal phase unavailable</span></div>
 <canvas id="chart" width="640" height="260" aria-label="Queue counts over time"></canvas>
 <label class="scrub">Playback position <input id="seek" type="range" min="0" value="0" step="0.1"></label>
-<p class="readout" id="readout"></p>
+<div class="legend" aria-label="Chart legend"><span><i class="legend-estimate"></i> Estimate</span><span><i class="legend-reference"></i> Reference</span></div>
+<p class="count-guide">A count with + is a lower bound. Uncertain counts are left unplotted.</p>
 <p id="model-evidence"></p>
 <div class="inputs"><button id="csv">Export CSV</button><button id="json">Export JSON</button></div>
 </section>
-<section aria-labelledby="priority-heading" class="priority-panel">
+<section aria-labelledby="priority-heading" class="work-panel priority-panel">
 <h2 id="priority-heading">Intersection priority replay</h2>
-<p>Compare approach queues at the selected time and preview one service sequence. Simulation only.</p>
+<p class="panel-intro">Compare queues at the selected time and preview a service sequence. This simulation does not control a real intersection.</p>
 <div class="inputs">
 <label><input id="priority-demo" type="checkbox" checked> Four-approach example</label>
 <label>Priority threshold (vehicles) <input id="priority-threshold" type="number" min="1" value="10"></label>
 <label><input id="pedestrian-call" type="checkbox" checked> Pedestrian call pending</label>
 <label>Crossing length (m) <input id="crossing-length" type="number" min="1" max="100" value="14"></label>
 </div>
-<label>Optional lane-to-approach assignments <textarea id="approach-map" placeholder="north-left=North&#10;north-through=North"></textarea></label>
-<label>Optional pending crossings <textarea id="crossing-calls" placeholder="North crosswalk=14&#10;East crosswalk=18"></textarea></label>
+<details class="advanced"><summary>Custom approaches and crossings</summary><label>Optional lane-to-approach assignments <textarea id="approach-map" placeholder="north-left=North&#10;north-through=North"></textarea></label>
+<label>Optional pending crossings <textarea id="crossing-calls" placeholder="North crosswalk=14&#10;East crosswalk=18"></textarea></label></details>
 <button id="plan-priority" type="button">Compare and plan</button>
 <p id="priority-summary" aria-live="polite"></p>
 <ol id="priority-order"></ol>

@@ -65,6 +65,10 @@ function render() {
   context.fillText("0 s", 40, 246);
   context.fillText(maxTime.toFixed(1) + " s", chart.width - 75, 246);
   const current = rows.reduce((nearest, row) => row.time <= now ? row : nearest, null);
+  const phase = ["red", "amber", "green"].includes(current?.phase) ? current.phase : "unknown";
+  const phaseState = element("phase-state");
+  phaseState.dataset.phase = phase;
+  phaseState.textContent = phase === "unknown" ? "Signal phase unavailable" : "Signal: " + phase;
   if (!marking) paintOverlay(current);
   const votes = Array.isArray(current?.model_votes) ? current.model_votes.filter(vote => vote && typeof vote.model === "string") : [];
   element("model-evidence").textContent = votes.length

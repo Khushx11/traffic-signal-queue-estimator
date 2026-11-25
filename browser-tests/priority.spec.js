@@ -8,6 +8,7 @@ test("prioritises a busy approach after pedestrian clearance, then serves the ot
   await page.locator("#priority-threshold").fill("20");
   await page.getByRole("button", {name: "Compare and plan"}).click();
   await expect(page.locator("#priority-order li").nth(3)).toContainText("North · Regular service");
+  await page.getByText("Custom approaches and crossings", {exact: true}).click();
   await page.locator("#crossing-calls").fill("North crossing=16\nEast crossing=12");
   await page.getByRole("button", {name: "Compare and plan"}).click();
   await expect(page.locator("#priority-order li").nth(3)).toContainText("East crossing · Walk");
