@@ -52,8 +52,9 @@ browser-playable local recording and its matching camera JSON, then choose
 **Run local inference**. The loopback server accepts the original camera
 layout or the compiled configuration. Videos stay on the local machine.
 The review workspace also accepts existing prediction JSON and exports CSV/JSON.
-Mark lane polygons, stop points and four matching image/ground anchors in
-a layout JSON such as [the Peachtree example](configs/peachtree-camera1-pilot.json).
+Use **Mark camera geometry** to mark a single lane on a paused frame and
+download a layout JSON. Enter measured ground width and depth. For multiple
+lanes or a non-rectangular anchor layout, configure the JSON directly. See [the Peachtree example](configs/peachtree-camera1-pilot.json).
 The example applies to the original 640 × 480 camera view and uses approximate
 ground dimensions.
 
@@ -72,8 +73,11 @@ python3 scripts/download_raw.py data/local/peachtree-cam1.avi
   --weights data/local/yolo11n.pt --max-frames 120
 ```
 
-The raw downloader retrieves the exact Peachtree recording and checks ZIP
-integrity and SHA-256. See [source and licence notes](docs/data-pilot.md) and
+The raw downloader retrieves the exact Peachtree archive member and checks ZIP
+integrity and SHA-256. A full decode of the verified camera 1 member yielded
+1,714 frames and a corrupt-frame warning. Camera 4 yielded 2,534 frames and
+also reported frame corruption. These are usable pilot excerpts where pixels
+decode. Their annotation clocks and cycle coverage remain unverified. See [source and licence notes](docs/data-pilot.md) and
 [the asset ledger](data/verified-assets.json). The original archive inventory
 tool is intended for processed/reference assets. Processed footage contains
 baked-in vehicle annotations and belongs outside detector input.
@@ -83,6 +87,13 @@ after verifying alignment. A phase file maps each lane to an object with a
 `source` and an ordered `events` list. Each event has recording-relative
 `time` in seconds and `phase` set to red, amber, green or null. No phase is
 shown before the first event.
+
+An optional `reviewed_empty` map in a camera layout records manually reviewed
+empty-lane intervals. Each lane has a `source` and a sorted `intervals` list of
+`[start, end]` seconds with exclusive ends. Conflicting track observations
+cancel the supplied empty evidence. Confirmed zeros export their provenance.
+Run held-out benchmarks without this evidence. The evaluator rejects assisted
+zeros by default and reports them separately only with `--allow-reviewed-empty`.
 
 ## Detector robustness experiment
 
@@ -114,3 +125,10 @@ every expected timestamp. No audited real-data reference file is bundled.
 The [synthetic recovery results](results/synthetic-recovery.json) exercise
 queue state transitions in isolation. The browser tests exercise the
 synthetic sample, import, seeking, exports and the upload request flow.
+
+The opt-in real browser test invokes the local detector and exports its actual
+results. Run it with the model dependencies and checkpoint installed.
+
+```sh
+QUEUE_REAL_INFERENCE=1 QUEUE_VIDEO_PYTHON=.venv/bin/python   QUEUE_VIDEO_WEIGHTS=data/local/yolo11n.pt npm test -- --workers=1
+```

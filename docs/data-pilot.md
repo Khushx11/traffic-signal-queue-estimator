@@ -59,3 +59,16 @@ collection window in the catalogue. Preview frames in the corresponding
 processed recording show a rotated and resampled view. Treat any raw-frame
 to trajectory correspondence as provisional pending measured event alignment
 and confirmation of the effective trajectory and signal time ranges.
+
+## Full decode follow-up
+
+The publisher archive supplied complete ZIP members, which does not establish
+complete recordings. FFmpeg decoded 1,714 frames through 2:51.50 from raw
+Peachtree camera 1 (SHA-256 recorded in the verified asset ledger). The second
+raw member, `NGSIM Peachtree Videos/peachtree-camera4-0400pm-0415pm.avi`,
+decoded 2,534 frames through 4:13.50. Its SHA-256 is
+`c6fec882b3e9d87ad2a56ad67f7d3f8943e2c4e4c93c89392136ebe930b98612`.
+Each full decode reported a corrupt frame. Neither supplied 15 minutes of
+decodable footage. These results supersede the camera 1 frame count reported
+by the AVI header. Selected clean spans may contain usable cycles if their
+camera, phase transitions, and per-lane counts can be independently verified.
