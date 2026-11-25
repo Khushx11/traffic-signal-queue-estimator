@@ -46,7 +46,24 @@
 <p class="readout" id="readout"></p>
 <div class="inputs"><button id="csv">Export CSV</button><button id="json">Export JSON</button></div>
 </section>
+<section aria-labelledby="priority-heading" class="priority-panel">
+<h2 id="priority-heading">Intersection priority replay</h2>
+<p>Compare approach queues at the selected time and preview one service sequence. Simulation only.</p>
+<div class="inputs">
+<label><input id="priority-demo" type="checkbox" checked> Four-approach example</label>
+<label>Priority threshold (vehicles) <input id="priority-threshold" type="number" min="1" value="10"></label>
+<label><input id="pedestrian-call" type="checkbox" checked> Pedestrian call pending</label>
+<label>Crossing length (m) <input id="crossing-length" type="number" min="1" max="100" value="14"></label>
+</div>
+<label>Optional lane-to-approach assignments <textarea id="approach-map" placeholder="north-left=North&#10;north-through=North"></textarea></label>
+<label>Optional pending crossings <textarea id="crossing-calls" placeholder="North crosswalk=14&#10;East crosswalk=18"></textarea></label>
+<button id="plan-priority" type="button">Compare and plan</button>
+<p id="priority-summary" aria-live="polite"></p>
+<ol id="priority-order"></ol>
+</section>
 </main>
 <script src="app.js" defer></script>
+<script src="priority.js" defer></script>
+<script src="priority-ui.js" defer></script>
 </body>
 </html>

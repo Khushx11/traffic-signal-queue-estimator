@@ -157,3 +157,21 @@ Downloaded data and checkpoint files are kept outside the repository.
 See the [roadside source guide](docs/roadside-camera-data.md), [FHWA data
 notes](docs/data-pilot.md) and [detector sources](docs/detector-robustness.md)
 for publisher terms. This repository currently has no project-level licence.
+
+## Intersection priority replay
+
+The workspace can compare any configured number of approaches. Try the
+four-approach example, or load predictions, clear **Four-approach example**,
+assign each lane to its approach, and choose **Compare and plan** at the
+desired playback position. Known counts and lower bounds contribute to
+reported demand. Missing, stale or uncertain lanes keep the approach total
+marked incomplete. Unmapped lane IDs are treated as separate approaches.
+
+The simulation schedules each configured approach once. Approaches meeting
+the configurable vehicle threshold move ahead in descending reported demand
+and receive a longer, capped green. Other approaches retain their input
+order. Enter pending pedestrian crossings and their lengths to simulate
+exclusive walk and clearance before vehicle movement. Amber, all-red,
+walk and clearance durations are illustrative. This is a snapshot-based
+priority comparison. It does not forecast arrivals, optimise successive
+cycles, or connect to a traffic controller.
