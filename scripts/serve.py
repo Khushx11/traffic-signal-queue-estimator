@@ -1,6 +1,7 @@
 """Serve the review workspace and run local inference on uploaded video bytes."""
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -11,6 +12,9 @@ from tempfile import TemporaryDirectory
 from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from traffic_queue.consensus import combine
+
 MAX_BYTES = 150 * 1024 * 1024
 
 
@@ -55,12 +59,22 @@ class Workspace(SimpleHTTPRequestHandler):
                     self.send_error(400, "Invalid camera layout")
                     return
             config.write_text(json.dumps(camera))
-            try:
+            def infer(index, checkpoint):
+                destination = output.with_name(f"output-{index}.json")
                 subprocess.run([sys.executable, str(ROOT / "scripts/infer.py"), str(video), str(config),
-                                str(output), "--weights", str(self.weights), "--recording", "local-upload"],
+                                str(destination), "--weights", str(checkpoint), "--recording", "local-upload"],
                                check=True, capture_output=True, timeout=600)
-                body = output.read_bytes()
-            except (OSError, subprocess.SubprocessError):
+                return json.loads(destination.read_text())
+
+            try:
+                if len(self.weights) == 1:
+                    rows = infer(0, self.weights[0])
+                else:
+                    with ThreadPoolExecutor(max_workers=len(self.weights)) as pool:
+                        runs = list(pool.map(infer, range(len(self.weights)), self.weights))
+                    rows = combine(runs)
+                body = json.dumps(rows, allow_nan=False).encode()
+            except (ValueError, OSError, subprocess.SubprocessError):
                 self.send_error(422, "Analysis failed. Check the video, camera configuration and model setup.")
                 return
         self.send_response(200)
@@ -73,12 +87,17 @@ class Workspace(SimpleHTTPRequestHandler):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--weights", type=Path, required=True)
+    parser.add_argument("--compare-weights", type=Path, action="append", default=[],
+                        help="Run up to two additional independent checkpoints concurrently")
     parser.add_argument("--port", type=int, default=8000)
     args = parser.parse_args()
-    if not args.weights.is_file():
+    checkpoints = [path.resolve() for path in [args.weights, *args.compare_weights]]
+    if len(checkpoints) > 3 or len({path.name for path in checkpoints}) != len(checkpoints):
+        parser.error("Use at most three distinctly named checkpoints")
+    if not all(path.is_file() for path in checkpoints):
         parser.error("Checkpoint file does not exist")
     with ThreadingHTTPServer(("127.0.0.1", args.port),
-                             partial(Workspace, weights=args.weights.resolve())) as server:
+                             partial(Workspace, weights=checkpoints)) as server:
         print(f"http://127.0.0.1:{server.server_port}", flush=True)
         server.serve_forever()
 

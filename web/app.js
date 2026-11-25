@@ -66,6 +66,11 @@ function render() {
   context.fillText(maxTime.toFixed(1) + " s", chart.width - 75, 246);
   const current = rows.reduce((nearest, row) => row.time <= now ? row : nearest, null);
   if (!marking) paintOverlay(current);
+  const votes = Array.isArray(current?.model_votes) ? current.model_votes.filter(vote => vote && typeof vote.model === "string") : [];
+  element("model-evidence").textContent = votes.length
+    ? "Model outputs · " + votes.map(vote => vote.model + " " +
+        (vote.count == null ? "uncertain" : vote.count + (vote.state === "lower_bound" ? "+" : ""))).join(" · ")
+    : "";
   const estimate = current?.count == null ? "Uncertain" : current.count + (current.state === "lower_bound" ? "+ vehicles" : " vehicles");
   element("readout").textContent = current
     ? now.toFixed(1) + " s · " + estimate + (showReference && current.reference != null ? " · reference " + current.reference : "")
@@ -136,6 +141,7 @@ element("recording-file").addEventListener("change", event => {
   context.clearRect(0, 0, chart.width, chart.height);
   paintOverlay(null);
   element("readout").textContent = "";
+  element("model-evidence").textContent = "";
   element("source").textContent = "Local recording · awaiting predictions";
 });
 video.addEventListener("error", () => { element("status").textContent = "This recording could not be played."; });
