@@ -13,7 +13,7 @@ def key(row):
     return row["recording"], row["lane"], round(row["time"] * 1000)
 
 
-def join(predictions, reference):
+def join(predictions, reference, *, allow_reviewed_empty=False):
     indexed = {}
     for prediction in predictions:
         identifier = key(prediction)
@@ -27,6 +27,8 @@ def join(predictions, reference):
             raise ValueError(f"Duplicate reference {identifier}")
         seen.add(identifier)
         prediction = indexed.get(identifier, {"state": "uncertain", "count": None, "confidence": 0})
+        if prediction.get("empty_source") and not allow_reviewed_empty:
+            raise ValueError(f"Operator-assisted zero at {identifier}; use an unassisted prediction run")
         rows.append({**item, **{field: prediction[field] for field in ("state", "count", "confidence")}})
     return rows
 
@@ -36,15 +38,21 @@ def main():
     parser.add_argument("reference", type=Path)
     parser.add_argument("predictions", type=Path)
     parser.add_argument("--split", default="test")
+    parser.add_argument("--allow-reviewed-empty", action="store_true",
+                        help="Report operator-assisted results separately")
     args = parser.parse_args()
     references = json.loads(args.reference.read_text())
     validate_split(references)
     selected = [row for row in references if row["split"] == args.split]
     if not selected:
         parser.error("No reference rows found for this split")
-    rows = join(json.loads(args.predictions.read_text()), selected)
+    rows = join(json.loads(args.predictions.read_text()), selected,
+                allow_reviewed_empty=args.allow_reviewed_empty)
     report = {
         "split": args.split,
+        "mode": "operator-assisted" if args.allow_reviewed_empty else "unassisted",
+        "empty_lane": score([row for row in rows if row["reference"] == 0]),
+        "nonempty_lane": score([row for row in rows if row["reference"] is not None and row["reference"] > 0]),
         "overall": score(rows),
         "cycle_peak": cycle_peaks(rows),
         "intersection": subgroup_scores(rows, "intersection"),

@@ -21,3 +21,11 @@ class BenchmarkJoinTests(unittest.TestCase):
             row.update(time=time, cycle_start_ms=0, cycle_end_ms=2000, cycle_step_ms=1000)
         self.assertEqual(cycle_peaks(rows[:1])["scored_cycles"], 0)
         self.assertEqual(cycle_peaks(rows), {"cycles": 2, "scored_cycles": 1, "mae": 1})
+
+    def test_reviewed_zero_is_rejected_in_unassisted_benchmark(self):
+        key = dict(recording="source", lane="A", time=1)
+        prediction = dict(key, state="estimate", count=0, confidence=0.85, empty_source="operator")
+        reference = dict(key, reference=0)
+        with self.assertRaisesRegex(ValueError, "Operator-assisted"):
+            join([prediction], [reference])
+        self.assertEqual(join([prediction], [reference], allow_reviewed_empty=True)[0]["count"], 0)
