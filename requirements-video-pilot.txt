@@ -1,0 +1,5 @@
+lap==0.5.14
+numpy==1.26.4
+opencv-python==4.11.0.86
+torch==2.8.0
+ultralytics==8.4.218
