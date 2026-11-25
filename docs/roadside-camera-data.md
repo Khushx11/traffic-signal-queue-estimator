@@ -43,3 +43,14 @@ Treat the two runs as scenarios at a single physical test site.
 
 The repository stores the source registry and audit code. Use the publisher
 downloads for media and sensor files.
+
+## Local decode check
+
+Visual Camera 6 in Run 1003 decoded all 1,937 frames without a decoder
+warning. The encoded playback lasts 64.567 seconds, while the publisher's
+per-frame capture clock spans 73.093 seconds. Use the capture timestamps
+when joining to reference tracks. Frame index divided by nominal playback
+FPS would use the wrong timebase. The inspected view shows a crosswalk,
+stop-line markings and signal hardware. The view of the upstream approach
+is limited, so it is useful as a camera-view check. It does not establish
+eligibility for a complete queue benchmark.
