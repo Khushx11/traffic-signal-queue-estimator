@@ -47,3 +47,21 @@ the corresponding pixel-space lane fields for the tracking baseline. The
 temporal occlusion indicator currently uses a heavy-vehicle heuristic and
 the confidence values are provisional. Benchmark joins expect explicit
 recording IDs, lane IDs, common timestamps, and independently audited labels.
+
+## Verified checks and remaining benchmark work
+
+- [Real-video smoke test](docs/smoke-test.md) documents a completed Mac CPU
+  run. It used raw footage and a provisional camera layout.
+- [Synthetic recovery experiment](results/synthetic-recovery.json) provides
+  raw predictions and metrics for a controlled track-state example. Regenerate
+  with `python3 scripts/run_fixture.py fixtures/occlusion.json`.
+- [Reference protocol](docs/annotation.md) defines the queue and its
+  visibility categories. [Verified assets](data/verified-assets.json)
+  records available file hashes.
+- Browser test: `npm ci && npx playwright install chromium && npm test`.
+  The test loads the bundled video, imports the recording and predictions,
+  uses the keyboard to seek, and verifies CSV and JSON downloads.
+
+The real-data benchmark still needs independently checked alignment and complete
+cycle labels. The synthetic video is an original rendering and can be opened
+offline from the local server. Australian evaluation depends on qualifying footage.
