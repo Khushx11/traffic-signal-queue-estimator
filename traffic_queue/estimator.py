@@ -86,10 +86,8 @@ class QueueEstimator:
                 state, count = "uncertain", None
             result[lane] = {
                 "state": state, "count": count, "visible_ids": seen_ids,
-                "recovered_ids": recovered_ids, "tail_distance": rear if queued else None,
+                "recovered_ids": recovered_ids, "tail_distance": rear if seen_ids or recovered_ids else None,
                 "confidence": 0.65 if recovered_ids else (1.0 if state == "estimate" else 0.0),
             }
-            if not seen_ids and not recovered_ids:
-                result[lane]["tail_distance"] = None
         self.previous_queue = queued
         return result
