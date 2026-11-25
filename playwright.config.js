@@ -9,7 +9,10 @@ module.exports = defineConfig({
       : {},
   },
   webServer: {
-    command: "python3 -m http.server --bind 127.0.0.1 --directory web 8019",
+    command: process.env.QUEUE_REAL_INFERENCE
+      ? '"$QUEUE_VIDEO_PYTHON" scripts/serve.py --weights "$QUEUE_VIDEO_WEIGHTS" --port 8019'
+      : "python3 -m http.server --bind 127.0.0.1 --directory web 8019",
+    timeout: 30000,
     url: "http://127.0.0.1:8019",
     reuseExistingServer: false,
   },
