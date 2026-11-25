@@ -1,0 +1,15 @@
+{
+  "kind": "synthetic track-state regression",
+  "lane": "approach",
+  "visible_distance": 40,
+  "frames": [
+    {"time": 0, "phase": "red", "reference": 0, "tracks": []},
+    {"time": 1, "phase": "red", "reference": 1, "tracks": [[1, 2, 0]]},
+    {"time": 2, "phase": "red", "reference": 2, "tracks": [[1, 2, 0], [2, 9, 0]]},
+    {"time": 3, "phase": "red", "reference": 2, "tracks": [[1, 2, 0], [2, 9, 0]]},
+    {"time": 3.5, "phase": "red", "reference": 2, "obscured": true, "tracks": [[2, 9, 0]]},
+    {"time": 4, "phase": "green", "reference": 1, "tracks": [[1, 1, 4], [2, 9, 0]]},
+    {"time": 5, "phase": "green", "reference": 0, "tracks": [[2, 5, 4]]},
+    {"time": 6, "phase": "green", "reference": 0, "tracks": []}
+  ]
+}
