@@ -157,12 +157,16 @@ for (const format of ["csv", "json"]) {
     else element("status").textContent = "Import predictions before exporting.";
   });
 }
-const sample = Array.from({length: 25}, (_, time) => ({
-  time, lane: "Northbound · 1",
-  count: time === 12 ? null : Math.max(0, Math.min(time, 24 - time, 8)),
-  reference: Math.max(0, Math.min(time, 24 - time, 8)),
-  state: time === 12 ? "uncertain" : time === 11 ? "lower_bound" : "estimate",
-  phase: time < 14 ? "red" : time < 22 ? "green" : "amber",
-  phase_source: "illustrative fixture", model: "fixture",
-}));
-load(sample, "Illustrative fixture · simulated counts");
+async function loadSample() {
+  try {
+    const response = await fetch("illustrative-cycle.json");
+    if (!response.ok) throw new Error("Sample unavailable");
+    load(await response.json(), "Synthetic signal cycle · track-state fixture");
+    video.src = "illustrative-cycle.mp4";
+    element("placeholder").hidden = true;
+  } catch (error) {
+    element("status").textContent = error.message;
+  }
+}
+
+loadSample();
