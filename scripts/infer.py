@@ -15,7 +15,7 @@ from traffic_queue.geometry import Lane, lane_at, project
 
 from traffic_queue.visibility import EmptyLaneEvidence
 
-VEHICLE_CLASSES = {"car", "motorcycle", "bus", "truck", "vehicle"}
+VEHICLE_CLASSES = {"car", "motorcycle", "bus", "truck", "vehicle", "small vehicle", "large vehicle"}
 
 
 def main():
@@ -58,7 +58,9 @@ def main():
         **(dict(slow_speed=5, max_gap=30, tail_margin=10) if args.method == "tracking" else {}),
     )
     region = [point for lane in camera["lanes"] for point in lane["image_polygon"]]
-    model = YOLO(str(args.weights), task="detect")
+    model = YOLO(str(args.weights))
+    if model.task not in {"detect", "obb"}:
+        raise ValueError("A box detection checkpoint is required")
     capture = cv2.VideoCapture(str(args.video))
     fps = capture.get(cv2.CAP_PROP_FPS)
     if not capture.isOpened() or fps <= 0:
@@ -85,7 +87,7 @@ def main():
                     raise ValueError("Camera approach falls outside the recording")
             inference = model.track(image, persist=True, tracker="bytetrack.yaml",
                                     verbose=False, device=args.device)[0]
-            boxes = inference.boxes
+            boxes = inference.obb if model.task == "obb" else inference.boxes
             observations, evidence, obscured = [], [], set()
             current = set()
             if boxes.id is not None:
@@ -114,10 +116,10 @@ def main():
                     elapsed = timestamp - samples[0][0]
                     distance = median(sample[2] for sample in list(samples)[-3:])
                     speed = abs(distance - median(sample[2] for sample in list(samples)[:3])) / elapsed if elapsed >= 0.4 else float("inf")
-                    length = 12.0 if label in {"bus", "truck"} else 4.5
+                    length = 12.0 if label in {"bus", "truck", "large vehicle"} else 4.5
                     if args.method == "tracking":
                         length = 18.0
-                    if label in {"bus", "truck"}:
+                    if label in {"bus", "truck", "large vehicle"}:
                         obscured.add(lane.id)
                     current.add(identity)
                     observations.append(Observation(identity, lane.id, distance, speed, length))

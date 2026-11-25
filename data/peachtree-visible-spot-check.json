@@ -1,0 +1,12 @@
+{
+  "recording": "peachtree-camera4-0400pm-0415pm",
+  "video_sha256": "c6fec882b3e9d87ad2a56ad67f7d3f8943e2c4e4c93c89392136ebe930b98612",
+  "reference_type": "visually marked stationary vehicles, selected subset",
+  "clock": "raw video seconds",
+  "phase_verified": false,
+  "complete_queue_count": false,
+  "frames": [
+    {"time": 80, "comparison_time": 79, "points": [[114,245],[163,232],[201,229],[243,222],[286,218],[326,214],[369,217]]},
+    {"time": 90, "comparison_time": 89, "points": [[114,245],[163,232],[201,229],[243,222],[286,218],[326,214],[369,217]]}
+  ]
+}

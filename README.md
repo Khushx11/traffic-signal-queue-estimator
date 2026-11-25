@@ -132,3 +132,17 @@ results. Run it with the model dependencies and checkpoint installed.
 ```sh
 QUEUE_REAL_INFERENCE=1 QUEUE_VIDEO_PYTHON=.venv/bin/python   QUEUE_VIDEO_WEIGHTS=data/local/yolo11n.pt npm test -- --workers=1
 ```
+
+## Aerial-camera option
+
+A manually reviewed Peachtree camera 4 diagnostic found 12 of 14 marked
+vehicle appearances with the aerial checkpoint on full frames, and 13 of
+14 with a crop. The labels cover seven selected vehicles on each of two
+frames. See the [scope and raw results](docs/data-pilot.md#camera-4-manual-detection-check).
+
+To try it on an elevated view, download the [official YOLO11n-OBB checkpoint](https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n-obb.pt)
+and pass its local path to `scripts/infer.py --weights` or
+`scripts/serve.py --weights`. The tested checkpoint SHA-256 is
+`b62898ebf38940ca4df323863e45ee9d84a1a46d5d11ebdde529fb33aa9f3a32`.
+ByteTrack uses the oriented detections and the app displays their enclosing
+rectangles. The broader-view checkpoint remains the general default.

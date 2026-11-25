@@ -72,3 +72,22 @@ Each full decode reported a corrupt frame. Neither supplied 15 minutes of
 decodable footage. These results supersede the camera 1 frame count reported
 by the AVI header. Selected clean spans may contain usable cycles if their
 camera, phase transitions, and per-lane counts can be independently verified.
+
+### Camera 4 manual detection check
+
+At 80 and 90 seconds, seven vehicle centres were manually marked before
+inspecting model outputs. The preceding frames at 79 and 89 seconds show
+the same selected vehicles at approximately the same positions. The marks
+cover a subset of visible stationary vehicles. They provide no signal phase,
+complete queue count or false-positive reference.
+
+The aerial YOLO11n-OBB checkpoint matched 12 of 14 marked appearances on
+full frames and 13 of 14 with the approach crop. The original and TrafficCAM
+models each matched 0 of 14 on full frames. With the crop the TrafficCAM
+model matched 2 of 14. Matching requires a mark inside one unique enclosing
+vehicle box. The repeated appearances are correlated and this is a diagnostic
+comparison on two deliberately selected frames.
+
+- [Reviewed points and source hash](../data/peachtree-visible-spot-check.json)
+- [Raw spot-check results](../results/peachtree-visible-spot-check.json)
+- [Decode report](../results/peachtree-decode-audit.json)

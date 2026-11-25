@@ -1,0 +1,16 @@
+{
+  "cam1": {
+    "frames": 1714,
+    "decoded_duration_seconds": 171.5,
+    "decoder_fault_messages": 4,
+    "expected_duration_seconds": 900.0,
+    "coverage_complete": false
+  },
+  "cam4": {
+    "frames": 2534,
+    "decoded_duration_seconds": 253.5,
+    "decoder_fault_messages": 4,
+    "expected_duration_seconds": 900.0,
+    "coverage_complete": false
+  }
+}
