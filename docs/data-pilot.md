@@ -33,3 +33,21 @@ footage and audited per-lane counts are available.
 - [Main Roads WA signal information](https://reportingcentreresources.mainroads.wa.gov.au/pdf/TrafficMap_Information_Sheet_Traffic_Lights.pdf)
 - [Transport for NSW camera catalogue](https://opendata.transport.nsw.gov.au/data/dataset/?license_id=cc-by&tags=camera+locations&tags=traffic+images)
 - [Brisbane CCTV footage requests](https://www.brisbane.qld.gov.au/transport-and-parking/traffic-management-and-safety/traffic-safety-and-cctv)
+
+## Inspected previews
+
+Official video metadata lists the Lankershim and Peachtree video collections
+as CC BY-SA 4.0. Each has a raw member and a processed member for the
+selected camera and time window. The processed previews have burned-in
+vehicle IDs and boxes. They are reference material, since using them as
+detector input would expose annotation evidence to the estimator.
+
+| Raw preview | Decoded stream | Observation at 5 s |
+| --- | --- | --- |
+| Lankershim camera 5, 08:30–08:45 | 640 × 480, 10 fps | Elevated oblique view. Approach markings and crosswalks are visible. Some approaches leave the frame. |
+| Peachtree camera 1, 16:00–16:15 | 640 × 480, 10 fps | Elevated view. The near approach has visible standing vehicles and extends outside the image. Trees obstruct parts of the junction. |
+
+At the inspected timestamps the signal heads were too small to verify
+movement-specific phases confidently from a still. Sample visibility and
+matching timing rows do not establish synchronisation or reference accuracy.
+Do not score these previews as complete cycles without the alignment audit.
