@@ -1,6 +1,6 @@
 import unittest
 
-from traffic_queue.evaluation import score, validate_split
+from traffic_queue.evaluation import score, subgroup_scores, validate_split
 from traffic_queue.geometry import Lane, lane_at, project
 
 
@@ -38,3 +38,8 @@ class EvaluationTests(unittest.TestCase):
         ]
         with self.assertRaises(ValueError):
             validate_split(records)
+
+    def test_unverified_phase_stays_separate(self):
+        evidence = dict(reference=2, state="estimate", count=1, confidence=1)
+        groups = subgroup_scores([dict(evidence, phase=None), dict(evidence, phase="red")], "phase")
+        self.assertEqual(list(groups), ["(unknown)", "red"])

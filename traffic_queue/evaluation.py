@@ -26,7 +26,8 @@ def score(rows, threshold=0.0):
 def subgroup_scores(rows, field):
     groups = defaultdict(list)
     for row in rows:
-        groups[row[field]].append(row)
+        group = row[field] if row[field] is not None else "(unknown)"
+        groups[group].append(row)
     return {group: score(samples) for group, samples in sorted(groups.items())}
 
 
