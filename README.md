@@ -7,21 +7,20 @@ recordings of signalised intersections. The research question is whether lane
 geometry and temporal tracking improve counts under occlusion at unseen
 intersections.
 
-**Current result.** The raw Peachtree pilot exposed a detector coverage failure.
-The original run emitted 1,758 zero counts despite visible queues. The revised
-pipeline reports insufficient evidence as uncertain. Both full-frame and
-approach-cropped inference abstained on all 240 lane-timestamps in the same
-120-frame follow-up. Cropping increased the number of lane-timestamps with
-tracks from 143 to 176, but it did not recover a trustworthy stop-line-connected
-queue. See the [audit follow-up](docs/smoke-test.md). Real-world count accuracy
-and Australian external validation remain unverified.
+## Evidence at a glance
 
-
-## What approach cropping recovered
-
-![Of 240 lane-timestamps per mode, 143 had tracks full-frame and 176 had tracks with approach cropping. Both modes issued zero queue counts.](docs/readme-benchmark.svg)
-
-Cropping yielded tracks at 33 additional lane-timestamps. Both modes withheld a queue estimate at all 240 lane-timestamps. The pilot shows where the detection pipeline recovered evidence and where that evidence was still insufficient for counting.
+- **Roadside video.** The [U.S. DOT roadside pilot](docs/roadside-camera-data.md)
+  includes verified daytime and night recordings from a fixed signalised
+  intersection. Inference can retain the publisher capture clock for
+  reference joins and the playback clock for browser seeking.
+- **Detector benchmarks.** [TrafficCAM fine-tuning](docs/detector-robustness.md)
+  improved frame counts on TrafficCAM and worsened them on MIO-TCD. The
+  [aerial spot check](results/peachtree-visible-spot-check.json) measures
+  matches to manually marked vehicles on two frames.
+- **Queue accuracy.** A held-out real-video benchmark still needs complete
+  cycles, verified phase-to-lane mappings and independent full queue counts.
+  The supplied [synthetic fixture](fixtures/occlusion.json) exercises queue
+  state transitions. Australian external validation is pending.
 
 ## Run the local workspace
 
@@ -86,6 +85,15 @@ cancel the supplied empty evidence. Confirmed zeros export their provenance.
 Run held-out benchmarks without this evidence. The evaluator rejects assisted
 zeros by default and reports them separately only with `--allow-reviewed-empty`.
 
+## Peachtree diagnostic
+
+![Full-frame and cropped modes tracked vehicles in 143 and 176 of 240 lane-timestamps. Both abstained at every timestamp.](docs/readme-benchmark.svg)
+
+The original Peachtree pilot emitted 1,758 unsupported zeros. The revised
+baseline abstained on all 240 lane-timestamps in a 120-frame follow-up.
+Cropping recovered tracks at 33 additional lane-timestamps. See the
+[smoke-test report](docs/smoke-test.md).
+
 ## Detector robustness experiment
 
 [Reproduce the TrafficCAM fine-tuning and MIO-TCD evaluation](docs/detector-robustness.md).
@@ -104,7 +112,6 @@ and [archive hashes](data/detection-benchmark-assets.json) record the data used.
 ```sh
 python3 -m unittest discover -s tests -v
 python3 scripts/run_fixture.py fixtures/occlusion.json
-python3 scripts/evaluate.py audited-reference.json runs/peachtree.json --split test
 npm ci
 npx playwright install chromium
 npm test
@@ -113,12 +120,16 @@ npm test
 Follow the [reference protocol](docs/annotation.md) when preparing benchmark
 data. Cycle peak scoring requires verifying the cycle bounds and providing
 every expected timestamp. No audited real-data reference file is bundled.
+Once you supply independent labels, run
+`python3 scripts/evaluate.py audited-reference.json runs/peachtree.json --split test`.
+For an aligned publisher capture clock use `--join-clock capture`.
+
 The [synthetic recovery results](results/synthetic-recovery.json) exercise
 queue state transitions in isolation. The browser tests exercise the
 synthetic sample, import, seeking, exports and the upload request flow.
 
-The opt-in real browser test invokes the local detector and exports its actual
-results. Run it with the model dependencies and checkpoint installed.
+GitHub CI runs the real model on the bundled synthetic clip. Run the same
+browser integration test locally with the installed model dependencies and checkpoint.
 
 ```sh
 QUEUE_REAL_INFERENCE=1 QUEUE_VIDEO_PYTHON=.venv/bin/python   QUEUE_VIDEO_WEIGHTS=data/local/yolo11n.pt npm test -- --workers=1
@@ -138,10 +149,9 @@ and pass its local path to `scripts/infer.py --weights` or
 ByteTrack uses the oriented detections and the app displays their enclosing
 rectangles. The broader-view checkpoint remains the general default.
 
-## Fixed traffic-signal camera dataset
+## Source terms
 
-The [roadside data guide](docs/roadside-camera-data.md) registers real fixed RGB
-camera footage from the US DOT Intersection Safety Challenge, along with
-frame clocks, scenario ground truth and a signal-phase capture where available.
-It also lists operating-intersection alternatives. The controlled US DOT
-scenarios are a separate test domain from the FHWA rooftop videos.
+Downloaded data and checkpoint files are kept outside the repository.
+See the [roadside source guide](docs/roadside-camera-data.md), [FHWA data
+notes](docs/data-pilot.md) and [detector sources](docs/detector-robustness.md)
+for publisher terms. This repository currently has no project-level licence.

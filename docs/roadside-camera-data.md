@@ -61,3 +61,38 @@ clock span of 61.513 seconds. Under the same Eastern time assumption, 614
 of 636 scenario reference timestamps overlap the camera capture range.
 The separate SPaT capture is present. Its phase payload is unverified.
 See the [clock overlap report](../results/roadside-clock-overlap.json).
+
+## Run clock-aware inference
+
+The example layout below is for software validation. Its ground dimensions
+are approximate, and the view has limited upstream coverage.
+
+```sh
+mkdir -p runs
+.venv/bin/python scripts/calibrate.py configs/isc-camera6-clock-pilot.json runs/isc-camera.json
+.venv/bin/python scripts/infer.py data/local/roadside/VisualCamera6_Run_1023.mp4 \
+  runs/isc-camera.json runs/isc-predictions.json --recording isc-run-1023-visual-camera-6 \
+  --weights data/local/yolo11n.pt \
+  --capture-clock data/local/roadside/VisualCamera6_Run_1023_frame-timing.csv \
+  --capture-timezone America/New_York
+```
+
+The output records `frame_index`, playback-relative `time` in seconds, and
+`capture_time_us` as integer Unix epoch microseconds. Vehicle speed and dwell
+use elapsed capture time. The browser still seeks on playback time.
+To evaluate verified references using `--join-clock capture`, attach the
+exact associated capture timestamp to every reference row. Missing matches
+stay uncertain. For cycle peak calculations, provide `time` and the cycle
+bounds on a common reference clock. Associate phases and tracks with frames
+before scoring them. The provided raw files do not establish that association
+on their own.
+
+The night PCAP contains 698 packets in the inspected capture and envelopes
+labelled `Type=SPAT` with a hex payload. Packet timestamps span approximately
+63.39 seconds and bracket the camera capture span under the Eastern time
+assumption. This checks capture availability. Phase payload decoding and
+signal-group mapping remain unverified.
+
+A lane's verified phase timeline can set `clock` to `capture` and use
+`capture_time_us` for each event instead of playback-relative `time`.
+Use exact event times from an independently mapped controller log.

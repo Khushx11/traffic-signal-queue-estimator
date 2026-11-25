@@ -3,7 +3,6 @@
 import argparse
 import json
 from collections import deque
-from bisect import bisect_right
 from statistics import median
 from pathlib import Path
 import sys
@@ -13,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from traffic_queue.estimator import Observation, QueueEstimator
 from traffic_queue.geometry import Lane, lane_at, project
 
+from traffic_queue.phases import PhaseTimeline
 from traffic_queue.frame_clock import read_frame_clock
 from traffic_queue.visibility import EmptyLaneEvidence
 
@@ -47,15 +47,8 @@ def main():
     lanes = [Lane(row["id"], tuple(map(tuple, row["polygon"])), tuple(row["stop"]),
                   tuple(row["upstream"]), row["visible_distance"]) for row in camera["lanes"]]
     phase_data = json.loads(args.phase_events.read_text()) if args.phase_events else camera.get("phase_events", {})
-    phase_clocks = {}
-    for lane_id, entry in phase_data.items():
-        events = entry["events"]
-        clock = [event["time"] for event in events]
-        if not entry["source"] or any(a >= b for a, b in zip(clock, clock[1:])) or any(
-            event["phase"] not in {"red", "amber", "green", None} for event in events
-        ):
-            raise ValueError("Phase events require ordered timestamps, valid states and source provenance")
-        phase_clocks[lane_id] = clock
+    phase_clocks = {lane_id: PhaseTimeline(entry, frame_clock is not None)
+                    for lane_id, entry in phase_data.items()}
     reviewed_empty = EmptyLaneEvidence(camera.get("reviewed_empty", {}), {lane.id for lane in lanes})
     matrix = camera["image_to_ground"]
     if args.method == "tracking":
@@ -144,11 +137,11 @@ def main():
             states = estimator.update(timestamp, observations, obscured if args.method == "temporal" else (),
                                       observed_empty=empty_sources)
             for lane_id, state in states.items():
-                index = bisect_right(phase_clocks.get(lane_id, ()), playback_time) - 1
-                phase = phase_data[lane_id]["events"][index]["phase"] if index >= 0 else None
+                timeline = phase_clocks.get(lane_id)
+                phase = timeline.at(playback_time, capture_us) if timeline else None
                 results.append({"recording": args.recording, "time": playback_time, "frame_index": frame_index,
                                 "capture_time_us": capture_us, "lane": lane_id, "model": f"{args.weights.name}/{args.method}" + ("/crop" if args.approach_crop else ""),
-                                "phase": phase, "phase_source": phase_data[lane_id]["source"] if phase else None,
+                                "phase": phase, "phase_source": timeline.source if phase else None,
                                 "empty_source": empty_sources.get(lane_id) if state["count"] == 0 else None,
                                 "tracks": [track for track in evidence if track["lane"] == lane_id], **state})
             frame_index += 1

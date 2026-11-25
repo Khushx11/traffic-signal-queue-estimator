@@ -1,0 +1,11 @@
+{
+  "recording": "isc-run-1023-visual-camera-6",
+  "frames": 1669,
+  "all_capture_timestamps_match_source": true,
+  "last_playback_timestamp_seconds": 55.6,
+  "capture_span_seconds": 61.51258,
+  "output_states": {
+    "uncertain": 1669
+  },
+  "queue_reference_available": false
+}

@@ -4,6 +4,7 @@ import unittest
 
 from scripts.evaluate import join
 from traffic_queue.frame_clock import read_frame_clock
+from traffic_queue.phases import PhaseTimeline
 
 
 class CaptureClockTests(unittest.TestCase):
@@ -28,3 +29,12 @@ class CaptureClockTests(unittest.TestCase):
         del reference["capture_time_us"]
         with self.assertRaisesRegex(ValueError, "capture_time_us"):
             join([prediction], [reference], clock="capture")
+
+    def test_capture_phase_ignores_playback_time(self):
+        entry = {"source": "controller", "clock": "capture",
+                 "events": [{"capture_time_us": 1700000000100000, "phase": "red"}]}
+        timeline = PhaseTimeline(entry, True)
+        self.assertIsNone(timeline.at(100, 1700000000099999))
+        self.assertEqual(timeline.at(1, 1700000000100000), "red")
+        with self.assertRaisesRegex(ValueError, "require a capture clock"):
+            PhaseTimeline(entry, False)
