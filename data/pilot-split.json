@@ -1,0 +1,13 @@
+{
+  "status": "candidate corridors pending reference audit",
+  "grouping_key": "physical_intersection",
+  "development_corridor": "Lankershim Boulevard",
+  "external_corridor": "Peachtree Street",
+  "preferred_additional_external_domain": "Australia",
+  "rules": [
+    "Keep cameras showing the same physical intersection in one split.",
+    "Exclude processed footage from detector input.",
+    "Configure held-out cameras from a reference image and verifiable geometry only.",
+    "Restrict benchmark scoring to independently audited reference timestamps."
+  ]
+}
