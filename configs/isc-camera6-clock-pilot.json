@@ -1,0 +1,11 @@
+{
+  "provenance": "Visual Camera 6, 1280x720. Approximate dimensions for testing frame-clock ingestion; not surveyed and not queue reference geometry.",
+  "image_anchors": [[91,241],[277,231],[240,150],[58,154]],
+  "ground_anchors": [[0,0],[3.5,0],[3.5,20],[0,20]],
+  "lanes": [{
+    "id": "far-approach-pilot",
+    "polygon": [[91,241],[277,231],[240,150],[58,154]],
+    "stop": [184,236],
+    "visible_end": [149,152]
+  }]
+}

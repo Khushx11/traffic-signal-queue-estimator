@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from traffic_queue.estimator import Observation, QueueEstimator
 from traffic_queue.geometry import Lane, lane_at, project
 
+from traffic_queue.frame_clock import read_frame_clock
 from traffic_queue.visibility import EmptyLaneEvidence
 
 VEHICLE_CLASSES = {"car", "motorcycle", "bus", "truck", "vehicle", "small vehicle", "large vehicle"}
@@ -29,8 +30,16 @@ def main():
     parser.add_argument("--max-frames", type=int)
     parser.add_argument("--phase-events", type=Path, help="JSON mapping lane IDs to verified phase transitions")
     parser.add_argument("--approach-crop", action="store_true", help="Magnify the configured lanes with surrounding context")
+    parser.add_argument("--capture-clock", type=Path, help="Publisher frame-timing CSV")
+    parser.add_argument("--capture-timezone", help="IANA timezone of the frame-timing CSV")
     parser.add_argument("--device", default="cpu")
     args = parser.parse_args()
+    if bool(args.capture_clock) != bool(args.capture_timezone):
+        parser.error("--capture-clock and --capture-timezone are required together")
+    frame_clock = None
+    if args.capture_clock:
+        with args.capture_clock.open(newline="") as stream:
+            frame_clock = read_frame_clock(stream, args.capture_timezone)
     import cv2
     from ultralytics import YOLO
 
@@ -74,7 +83,11 @@ def main():
             ok, frame = capture.read()
             if not ok:
                 break
-            timestamp = frame_index / fps
+            playback_time = frame_index / fps
+            if frame_clock is not None and frame_index >= len(frame_clock):
+                raise ValueError("Capture clock ended before the video")
+            capture_us = frame_clock[frame_index] if frame_clock is not None else None
+            timestamp = (capture_us - frame_clock[0]) / 1_000_000 if capture_us is not None else playback_time
             x_offset = y_offset = 0
             image = frame
             if args.approach_crop:
@@ -127,13 +140,14 @@ def main():
                                      "distance": distance, "speed": speed if speed != float("inf") else None})
             history = {identity: history[identity] for identity in current}
             blocked = {item.lane for item in observations} | obscured
-            empty_sources = reviewed_empty.at(timestamp, blocked)
+            empty_sources = reviewed_empty.at(playback_time, blocked)
             states = estimator.update(timestamp, observations, obscured if args.method == "temporal" else (),
                                       observed_empty=empty_sources)
             for lane_id, state in states.items():
-                index = bisect_right(phase_clocks.get(lane_id, ()), timestamp) - 1
+                index = bisect_right(phase_clocks.get(lane_id, ()), playback_time) - 1
                 phase = phase_data[lane_id]["events"][index]["phase"] if index >= 0 else None
-                results.append({"recording": args.recording, "time": timestamp, "lane": lane_id, "model": f"{args.weights.name}/{args.method}" + ("/crop" if args.approach_crop else ""),
+                results.append({"recording": args.recording, "time": playback_time, "frame_index": frame_index,
+                                "capture_time_us": capture_us, "lane": lane_id, "model": f"{args.weights.name}/{args.method}" + ("/crop" if args.approach_crop else ""),
                                 "phase": phase, "phase_source": phase_data[lane_id]["source"] if phase else None,
                                 "empty_source": empty_sources.get(lane_id) if state["count"] == 0 else None,
                                 "tracks": [track for track in evidence if track["lane"] == lane_id], **state})
@@ -142,6 +156,8 @@ def main():
         capture.release()
     if not frame_index:
         raise ValueError("No frames were decoded")
+    if frame_clock is not None and frame_index != len(frame_clock) and frame_index != args.max_frames:
+        raise ValueError("Video ended before the capture clock")
     with args.output.open("x") as output:
         json.dump(results, output, indent=2, allow_nan=False)
     print(f"{frame_index} frames in {perf_counter() - start:.2f}s on {args.device}")

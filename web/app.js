@@ -105,7 +105,7 @@ function move(time) {
 }
 
 function exportRows(format) {
-  const fields = ["time", "lane", "count", "state", "phase", "phase_source", "empty_source", "model", "reference"];
+  const fields = ["time", "frame_index", "capture_time_us", "lane", "count", "state", "phase", "phase_source", "empty_source", "model", "reference"];
   const cell = value => {
     const text = String(value ?? "");
     const safe = typeof value === "string" && /^[\s]*[=+@-]/.test(text) ? "'" + text : text;

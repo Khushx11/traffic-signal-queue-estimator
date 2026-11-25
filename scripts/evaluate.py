@@ -9,20 +9,26 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from traffic_queue.evaluation import coverage_curve, cycle_peaks, score, subgroup_scores, validate_split
 
 
-def key(row):
-    return row["recording"], row["lane"], round(row["time"] * 1000)
+def key(row, clock):
+    if clock == "capture":
+        value = row.get("capture_time_us")
+        if type(value) is not int or value < 0:
+            raise ValueError("Capture matching requires integer capture_time_us on every row")
+    else:
+        value = round(row["time"] * 1000)
+    return row["recording"], row["lane"], value
 
 
-def join(predictions, reference, *, allow_reviewed_empty=False):
+def join(predictions, reference, *, allow_reviewed_empty=False, clock="playback"):
     indexed = {}
     for prediction in predictions:
-        identifier = key(prediction)
+        identifier = key(prediction, clock)
         if identifier in indexed:
             raise ValueError(f"Duplicate prediction {identifier}")
         indexed[identifier] = prediction
     rows, seen = [], set()
     for item in reference:
-        identifier = key(item)
+        identifier = key(item, clock)
         if identifier in seen:
             raise ValueError(f"Duplicate reference {identifier}")
         seen.add(identifier)
@@ -40,6 +46,7 @@ def main():
     parser.add_argument("--split", default="test")
     parser.add_argument("--allow-reviewed-empty", action="store_true",
                         help="Report operator-assisted results separately")
+    parser.add_argument("--join-clock", choices=("playback", "capture"), default="playback")
     args = parser.parse_args()
     references = json.loads(args.reference.read_text())
     validate_split(references)
@@ -47,9 +54,10 @@ def main():
     if not selected:
         parser.error("No reference rows found for this split")
     rows = join(json.loads(args.predictions.read_text()), selected,
-                allow_reviewed_empty=args.allow_reviewed_empty)
+                allow_reviewed_empty=args.allow_reviewed_empty, clock=args.join_clock)
     report = {
         "split": args.split,
+        "join_clock": args.join_clock,
         "mode": "operator-assisted" if args.allow_reviewed_empty else "unassisted",
         "empty_lane": score([row for row in rows if row["reference"] == 0]),
         "nonempty_lane": score([row for row in rows if row["reference"] is not None and row["reference"] > 0]),
