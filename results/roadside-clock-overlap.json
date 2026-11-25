@@ -12,5 +12,12 @@
     "camera_span_seconds": 61.513,
     "reference_rows": 636,
     "reference_rows_in_camera_time_range": 614
+  },
+  "108": {
+    "timezone_assumption": "America/New_York",
+    "timestamped_frames": 1531,
+    "camera_span_seconds": 50.42,
+    "reference_rows": 516,
+    "reference_rows_in_camera_time_range": 503
   }
 }

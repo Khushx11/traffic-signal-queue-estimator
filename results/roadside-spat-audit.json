@@ -1,0 +1,167 @@
+{
+  "1023": {
+    "decoded_messages": 635,
+    "first_packet_time_us": 1708650925947258,
+    "last_packet_time_us": 1708650989340559,
+    "lane_mapping_verified": false,
+    "signal_groups": {
+      "-/9709/10": [
+        {
+          "capture_time_us": 1708650925947258,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/11": [
+        {
+          "capture_time_us": 1708650925947258,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/2": [
+        {
+          "capture_time_us": 1708650925947258,
+          "event_state": "protected-Movement-Allowed"
+        }
+      ],
+      "-/9709/5": [
+        {
+          "capture_time_us": 1708650925947258,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/8": [
+        {
+          "capture_time_us": 1708650925947258,
+          "event_state": "protected-Movement-Allowed"
+        }
+      ]
+    },
+    "observed_state_changes": 0
+  },
+  "108": {
+    "decoded_messages": 512,
+    "first_packet_time_us": 1702594661959115,
+    "last_packet_time_us": 1702594713043948,
+    "lane_mapping_verified": false,
+    "signal_groups": {
+      "-/9709/10": [
+        {
+          "capture_time_us": 1702594661959115,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/11": [
+        {
+          "capture_time_us": 1702594661959115,
+          "event_state": "stop-And-Remain"
+        },
+        {
+          "capture_time_us": 1702594700048948,
+          "event_state": "protected-Movement-Allowed"
+        },
+        {
+          "capture_time_us": 1702594707046300,
+          "event_state": "protected-clearance"
+        },
+        {
+          "capture_time_us": 1702594710044903,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/2": [
+        {
+          "capture_time_us": 1702594661959115,
+          "event_state": "protected-Movement-Allowed"
+        },
+        {
+          "capture_time_us": 1702594695050937,
+          "event_state": "protected-clearance"
+        },
+        {
+          "capture_time_us": 1702594698051835,
+          "event_state": "stop-And-Remain"
+        },
+        {
+          "capture_time_us": 1702594712045223,
+          "event_state": "protected-Movement-Allowed"
+        }
+      ],
+      "-/9709/5": [
+        {
+          "capture_time_us": 1702594661959115,
+          "event_state": "stop-And-Remain"
+        },
+        {
+          "capture_time_us": 1702594700048948,
+          "event_state": "protected-Movement-Allowed"
+        },
+        {
+          "capture_time_us": 1702594707046300,
+          "event_state": "protected-clearance"
+        },
+        {
+          "capture_time_us": 1702594710044903,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/8": [
+        {
+          "capture_time_us": 1702594661959115,
+          "event_state": "protected-Movement-Allowed"
+        },
+        {
+          "capture_time_us": 1702594695050937,
+          "event_state": "protected-clearance"
+        },
+        {
+          "capture_time_us": 1702594698051835,
+          "event_state": "stop-And-Remain"
+        },
+        {
+          "capture_time_us": 1702594712045223,
+          "event_state": "protected-Movement-Allowed"
+        }
+      ]
+    },
+    "observed_state_changes": 12
+  },
+  "1290": {
+    "decoded_messages": 308,
+    "first_packet_time_us": 1710439745096165,
+    "last_packet_time_us": 1710439775770814,
+    "lane_mapping_verified": false,
+    "signal_groups": {
+      "-/9709/10": [
+        {
+          "capture_time_us": 1710439745096165,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/11": [
+        {
+          "capture_time_us": 1710439745096165,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/2": [
+        {
+          "capture_time_us": 1710439745096165,
+          "event_state": "protected-Movement-Allowed"
+        }
+      ],
+      "-/9709/5": [
+        {
+          "capture_time_us": 1710439745096165,
+          "event_state": "stop-And-Remain"
+        }
+      ],
+      "-/9709/8": [
+        {
+          "capture_time_us": 1710439745096165,
+          "event_state": "protected-Movement-Allowed"
+        }
+      ]
+    },
+    "observed_state_changes": 0
+  }
+}

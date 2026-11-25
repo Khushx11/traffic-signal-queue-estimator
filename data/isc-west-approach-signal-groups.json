@@ -1,0 +1,9 @@
+{
+  "source": "U.S. DOT ISC Stage 1B ITS DataHub Metadata v2.0, section 4.7.3, Table 21 (vehicle movements at TFHRC West Intersection)",
+  "lanes": {
+    "eastbound-vehicle-approach": "-/9709/2",
+    "northbound-vehicle-approach": "-/9709/5",
+    "westbound-vehicle-approach": "-/9709/8",
+    "southbound-vehicle-approach": "-/9709/11"
+  }
+}

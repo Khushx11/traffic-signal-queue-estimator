@@ -14,7 +14,12 @@
         "Validation Data Sample/Run_1023/VisualCamera6_Run_1023.mp4",
         "Validation Data Sample/Run_1023/VisualCamera6_Run_1023_frame-timing.csv",
         "Validation Data Sample/Run_1023/V2XHubSPaT_Run_1023.pcap",
-        "Validation Data Sample/Run_1023/Run_1023_GT.csv"
+        "Validation Data Sample/Run_1023/Run_1023_GT.csv",
+        "Validation Data Sample/Run_108/V2XHubSPaT_Run_108.pcap",
+        "Validation Data Sample/Run_108/VisualCamera3_Run_108.mp4",
+        "Validation Data Sample/Run_108/VisualCamera3_Run_108_frame-timing.csv",
+        "Validation Data Sample/Run_108/Run_108_GT.csv",
+        "Validation Data Sample/Run_1290/V2XHubSPaT_Run_1290.pcap"
       ],
       "sha256": {
         "ISC_Run_1003_ISC_all_timing.csv": "5e79b8692cc25bf21d4c3a4f3dfd1fb72b36a719b76c15df57311c0be5eda443",
@@ -24,7 +29,12 @@
         "VisualCamera6_Run_1003_frame-timing.csv": "64a3027af7d209be3f7d4336da1e4cc8b42b562c86401f8fa3f750a2d352cc41",
         "VisualCamera6_Run_1023_frame-timing.csv": "40e1c8baefc583239b5c605e081bc1ed8dc4e95af8fc0d0561b60250bd5830f8",
         "VisualCamera6_Run_1003.mp4": "d88bc061f8133adc8a195dbd231712f9738dfeb7bb1b10a2e2e968e6eccc8000",
-        "VisualCamera6_Run_1023.mp4": "7cf8d31b7b70d0979c4b87b95e534ab785d2f838a732d3a53d489c14ad1ae11f"
+        "VisualCamera6_Run_1023.mp4": "7cf8d31b7b70d0979c4b87b95e534ab785d2f838a732d3a53d489c14ad1ae11f",
+        "V2XHubSPaT_Run_108.pcap": "30191d56275d9d19a0b6504d03790c6be7c624f8f3ed8e50026250e7819f4bed",
+        "VisualCamera3_Run_108.mp4": "3999d83a40e120e539edd59bf3cc866ab1257c61be5a897af06b18e48dcf6ee3",
+        "VisualCamera3_Run_108_frame-timing.csv": "180801a92909dd0f3d39dfaeb459c59a95418ce603df2da60c1244ae92ceb367",
+        "Run_108_GT.csv": "b019ff972f74e3bcee8ec506bcee2c9483b60090ccbe3d4d7932300ea82cc6d7",
+        "V2XHubSPaT_Run_1290.pcap": "928f307f837d71dfeadbf33587aba56cb2bdd7f3a29c0ebb1eaaf27ebaec1762"
       }
     },
     {

@@ -1,0 +1,106 @@
+{
+  "eastbound-vehicle-approach": {
+    "clock": "capture",
+    "source": "U.S. DOT ISC Stage 1B ITS DataHub Metadata v2.0, section 4.7.3, Table 21 (vehicle movements at TFHRC West Intersection) \u00b7 SPaT group -/9709/2",
+    "events": [
+      {
+        "capture_time_us": 1702594661959115,
+        "phase": "green"
+      },
+      {
+        "capture_time_us": 1702594695050937,
+        "phase": "amber"
+      },
+      {
+        "capture_time_us": 1702594698051835,
+        "phase": "red"
+      },
+      {
+        "capture_time_us": 1702594712045223,
+        "phase": "green"
+      },
+      {
+        "capture_time_us": 1702594713043949,
+        "phase": null
+      }
+    ]
+  },
+  "northbound-vehicle-approach": {
+    "clock": "capture",
+    "source": "U.S. DOT ISC Stage 1B ITS DataHub Metadata v2.0, section 4.7.3, Table 21 (vehicle movements at TFHRC West Intersection) \u00b7 SPaT group -/9709/5",
+    "events": [
+      {
+        "capture_time_us": 1702594661959115,
+        "phase": "red"
+      },
+      {
+        "capture_time_us": 1702594700048948,
+        "phase": "green"
+      },
+      {
+        "capture_time_us": 1702594707046300,
+        "phase": "amber"
+      },
+      {
+        "capture_time_us": 1702594710044903,
+        "phase": "red"
+      },
+      {
+        "capture_time_us": 1702594713043949,
+        "phase": null
+      }
+    ]
+  },
+  "westbound-vehicle-approach": {
+    "clock": "capture",
+    "source": "U.S. DOT ISC Stage 1B ITS DataHub Metadata v2.0, section 4.7.3, Table 21 (vehicle movements at TFHRC West Intersection) \u00b7 SPaT group -/9709/8",
+    "events": [
+      {
+        "capture_time_us": 1702594661959115,
+        "phase": "green"
+      },
+      {
+        "capture_time_us": 1702594695050937,
+        "phase": "amber"
+      },
+      {
+        "capture_time_us": 1702594698051835,
+        "phase": "red"
+      },
+      {
+        "capture_time_us": 1702594712045223,
+        "phase": "green"
+      },
+      {
+        "capture_time_us": 1702594713043949,
+        "phase": null
+      }
+    ]
+  },
+  "southbound-vehicle-approach": {
+    "clock": "capture",
+    "source": "U.S. DOT ISC Stage 1B ITS DataHub Metadata v2.0, section 4.7.3, Table 21 (vehicle movements at TFHRC West Intersection) \u00b7 SPaT group -/9709/11",
+    "events": [
+      {
+        "capture_time_us": 1702594661959115,
+        "phase": "red"
+      },
+      {
+        "capture_time_us": 1702594700048948,
+        "phase": "green"
+      },
+      {
+        "capture_time_us": 1702594707046300,
+        "phase": "amber"
+      },
+      {
+        "capture_time_us": 1702594710044903,
+        "phase": "red"
+      },
+      {
+        "capture_time_us": 1702594713043949,
+        "phase": null
+      }
+    ]
+  }
+}

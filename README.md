@@ -12,7 +12,9 @@ intersections.
 - **Roadside video.** The [U.S. DOT roadside pilot](docs/roadside-camera-data.md)
   includes verified daytime and night recordings from a fixed signalised
   intersection. Inference can retain the publisher capture clock for
-  reference joins and the playback clock for browser seeking.
+  reference joins and the playback clock for browser seeking. The [controller
+  audit](results/roadside-spat-audit.json) decoded 1,455 phase messages across
+  three runs and found movement-state changes in one run.
 - **Detector benchmarks.** [TrafficCAM fine-tuning](docs/detector-robustness.md)
   improved frame counts on TrafficCAM and worsened them on MIO-TCD. The
   [aerial spot check](results/peachtree-visible-spot-check.json) measures

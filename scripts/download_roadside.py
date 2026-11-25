@@ -14,10 +14,12 @@ ROOT = Path(__file__).resolve().parents[1]
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--run", choices=("1003", "1023", "108", "1290"))
     args = parser.parse_args()
     source = json.loads((ROOT / "data/roadside-sources.json").read_text())["sources"][0]
     args.output.mkdir(parents=True, exist_ok=True)
-    paths = [(member, args.output / Path(member).name) for member in source["members"]]
+    paths = [(member, args.output / Path(member).name) for member in source["members"]
+             if args.run is None or Path(member).parent.name == f"Run_{args.run}"]
     if any(path.exists() for _, path in paths):
         parser.error("Choose a directory without existing sample files")
     report = {}
