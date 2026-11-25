@@ -54,3 +54,10 @@ FPS would use the wrong timebase. The inspected view shows a crosswalk,
 stop-line markings and signal hardware. The view of the upstream approach
 is limited, so it is useful as a camera-view check. It does not establish
 eligibility for a complete queue benchmark.
+
+Run 1023 shows the same view at night. It decoded all 1,669 frames without
+decoder warnings. Encoded playback lasts 55.633 seconds across a capture
+clock span of 61.513 seconds. Under the same Eastern time assumption, 614
+of 636 scenario reference timestamps overlap the camera capture range.
+The separate SPaT capture is present. Its phase payload is unverified.
+See the [clock overlap report](../results/roadside-clock-overlap.json).
