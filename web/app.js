@@ -1,0 +1,143 @@
+"use strict";
+
+const element = (id) => document.getElementById(id);
+const video = element("video");
+const chart = element("chart");
+const context = chart.getContext("2d");
+const lane = element("lane");
+const seek = element("seek");
+let records = [];
+let objectUrl;
+
+function load(rows, label) {
+  if (!Array.isArray(rows) || !rows.length || rows.some(row =>
+    !row || !Number.isFinite(row.time) || row.time < 0 ||
+    typeof row.lane !== "string" || !row.lane ||
+    !["estimate", "lower_bound", "uncertain"].includes(row.state) ||
+    (row.state === "uncertain" ? row.count !== null : !Number.isInteger(row.count) || row.count < 0) ||
+    (row.reference != null && (!Number.isInteger(row.reference) || row.reference < 0))
+  )) {
+    throw new Error("Expected rows with time, lane, state and count.");
+  }
+  records = [...rows].sort((a, b) => a.time - b.time);
+  lane.replaceChildren(...[...new Set(records.map(row => row.lane))].map(id => new Option(id, id)));
+  seek.max = Math.max(1, records[records.length - 1].time);
+  seek.value = 0;
+  element("source").textContent = label;
+  render();
+}
+
+function render() {
+  const rows = records.filter(row => row.lane === lane.value);
+  if (!rows.length) return;
+  const maxTime = Number(seek.max);
+  const now = Number(seek.value);
+  const showReference = element("reference").checked;
+  const ceiling = Math.max(1, ...rows.map(row => Math.max(row.count ?? 0, showReference ? row.reference ?? 0 : 0)));
+  const x = (s) => 40 + s / maxTime * (chart.width - 58);
+  const y = (n) => 225 - n / ceiling * 188;
+  context.clearRect(0, 0, chart.width, chart.height);
+  context.font = "12px system-ui";
+  for (const [index, row] of rows.entries()) {
+    if (!["red", "amber", "green"].includes(row.phase)) continue;
+    context.fillStyle = {red: "#392c36", amber: "#423c2d", green: "#233d37"}[row.phase];
+    const next = rows[index + 1]?.time ?? row.time;
+    context.fillRect(x(row.time), 22, x(next) - x(row.time), 203);
+  }
+  for (let step = 0; step <= 4; step++) {
+    const n = Math.round(ceiling * step / 4);
+    context.fillStyle = "#a9bdcf";
+    context.fillText(String(n), 8, y(n) + 4);
+    context.fillRect(40, y(n), chart.width - 58, 0.5);
+  }
+  for (const [field, color] of (showReference ? [["reference", "#d7bdf5"], ["count", "#7eedcb"]] : [["count", "#7eedcb"]])) {
+    context.fillStyle = color;
+    for (const row of rows) {
+      if (row[field] == null) continue;
+      const lower = field === "count" && row.state === "lower_bound";
+      context.fillRect(x(row.time) - 2, y(row[field]) - 2, lower ? 8 : 4, 4);
+    }
+  }
+  context.fillStyle = "#f2f6f8";
+  context.fillRect(x(now), 22, 1, 203);
+  context.fillText("0 s", 40, 246);
+  context.fillText(maxTime.toFixed(1) + " s", chart.width - 75, 246);
+  const current = rows.reduce((nearest, row) => row.time <= now ? row : nearest, null);
+  const estimate = current?.count == null ? "Uncertain" : current.count + (current.state === "lower_bound" ? "+ vehicles" : " vehicles");
+  element("readout").textContent = current
+    ? now.toFixed(1) + " s · " + estimate + (showReference && current.reference != null ? " · reference " + current.reference : "")
+    : "No estimate at this timestamp";
+}
+
+function move(time) {
+  seek.value = time;
+  if (Number.isFinite(video.duration)) video.currentTime = Math.min(Number(seek.value), video.duration);
+  render();
+}
+
+function exportRows(format) {
+  const fields = ["time", "lane", "count", "state", "phase", "phase_source", "model", "reference"];
+  const cell = value => {
+    const text = String(value ?? "");
+    const safe = typeof value === "string" && /^[\s]*[=+@-]/.test(text) ? "'" + text : text;
+    return '"' + safe.replaceAll('"', '""') + '"';
+  };
+  const output = format === "csv"
+    ? [fields.join(","), ...records.map(row => fields.map(key => cell(row[key])).join(","))].join("\n")
+    : JSON.stringify(records, null, 2);
+  const url = URL.createObjectURL(new Blob([output], {type: format === "csv" ? "text/csv" : "application/json"}));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "queue-counts." + format;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+element("recording-file").addEventListener("change", event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (objectUrl) URL.revokeObjectURL(objectUrl);
+  objectUrl = URL.createObjectURL(file);
+  video.src = objectUrl;
+  element("placeholder").hidden = true;
+  element("status").textContent = "Local video loaded. Import predictions for this recording to compare.";
+  records = [];
+  lane.replaceChildren();
+  context.clearRect(0, 0, chart.width, chart.height);
+  element("readout").textContent = "";
+  element("source").textContent = "Local recording · awaiting predictions";
+});
+video.addEventListener("error", () => { element("status").textContent = "This recording could not be played."; });
+element("predictions").addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+  try {
+    load(JSON.parse(await file.text()), "Imported predictions · " + file.name);
+    element("status").textContent = "Predictions loaded.";
+  } catch (error) {
+    element("status").textContent = error.message;
+  }
+});
+video.addEventListener("timeupdate", () => { seek.value = video.currentTime; render(); });
+seek.addEventListener("input", () => move(Number(seek.value)));
+lane.addEventListener("change", render);
+element("reference").addEventListener("change", render);
+chart.addEventListener("click", event => {
+  const pixel = event.offsetX / chart.clientWidth * chart.width;
+  move(Math.max(0, (pixel - 40) / (chart.width - 58) * Number(seek.max)));
+});
+for (const format of ["csv", "json"]) {
+  element(format).addEventListener("click", () => {
+    if (records.length) exportRows(format);
+    else element("status").textContent = "Import predictions before exporting.";
+  });
+}
+const sample = Array.from({length: 25}, (_, time) => ({
+  time, lane: "Northbound · 1",
+  count: time === 12 ? null : Math.max(0, Math.min(time, 24 - time, 8)),
+  reference: Math.max(0, Math.min(time, 24 - time, 8)),
+  state: time === 12 ? "uncertain" : time === 11 ? "lower_bound" : "estimate",
+  phase: time < 14 ? "red" : time < 22 ? "green" : "amber",
+  phase_source: "illustrative fixture", model: "fixture",
+}));
+load(sample, "Illustrative fixture · simulated counts");
