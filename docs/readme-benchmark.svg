@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title detail" width="720" height="165" viewBox="0 0 720 165">
+<title id="title">Follow-up lane-timestamps with tracks</title>
+<desc id="detail">Full frame 143; Approach crop 176. Scale begins at zero.</desc>
+<rect width="720" height="165" rx="12" fill="#eef4f8"/>
+<g font-family="system-ui, sans-serif" fill="#172c42"><text x="24" y="31" font-size="19" font-weight="700">Follow-up lane-timestamps with tracks</text>
+<text x="24" y="69" font-size="14">Full frame</text><rect x="209" y="54" width="394" height="20" rx="4" fill="#d5e2eb"/><rect x="209" y="54" width="234.76" height="20" rx="4" fill="#146c79"/><text x="619" y="69" font-size="14">143</text>
+<text x="24" y="108" font-size="14">Approach crop</text><rect x="209" y="93" width="394" height="20" rx="4" fill="#d5e2eb"/><rect x="209" y="93" width="288.93" height="20" rx="4" fill="#2f5687"/><text x="619" y="108" font-size="14">176</text>
+<text x="209" y="150" font-size="12">0</text><text x="602" y="150" text-anchor="end" font-size="12">240</text></g>
+</svg>

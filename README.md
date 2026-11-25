@@ -1,5 +1,7 @@
 # Traffic Signal Queue Estimator
 
+Portfolio by [Khush Bhavin Maru](https://github.com/Khushx11) · Adelaide University MAAIM.
+
 A local research prototype for estimating per-lane queues from fixed-camera
 recordings of signalised intersections. The research question is whether lane
 geometry and temporal tracking improve counts under occlusion at unseen
@@ -13,6 +15,22 @@ approach-cropped inference abstained on all 240 lane-timestamps in the same
 tracks from 143 to 176, but it did not recover a trustworthy stop-line-connected
 queue. See the [audit follow-up](docs/smoke-test.md). Real-world count accuracy
 and Australian external validation remain unverified.
+
+
+## Traffic queue workflow
+
+```mermaid
+flowchart LR
+    A["Fixed-camera video and lane layout"]
+    B["Detect and track vehicles"]
+    C["Check stop-line queue evidence"]
+    D["Estimate or report uncertainty"]
+    A --> B --> C --> D
+```
+
+![Follow-up lane-timestamps with tracks](docs/readme-benchmark.svg)
+
+Both modes abstained on all 240 lane-timestamps. Having tracks available did not establish a trustworthy queue count.
 
 ## Run the local workspace
 
