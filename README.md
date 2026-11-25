@@ -17,20 +17,11 @@ queue. See the [audit follow-up](docs/smoke-test.md). Real-world count accuracy
 and Australian external validation remain unverified.
 
 
-## Traffic queue workflow
+## What approach cropping recovered
 
-```mermaid
-flowchart LR
-    A["Fixed-camera video and lane layout"]
-    B["Detect and track vehicles"]
-    C["Check stop-line queue evidence"]
-    D["Estimate or report uncertainty"]
-    A --> B --> C --> D
-```
+![Of 240 lane-timestamps per mode, 143 had tracks full-frame and 176 had tracks with approach cropping. Both modes issued zero queue counts.](docs/readme-benchmark.svg)
 
-![Follow-up lane-timestamps with tracks](docs/readme-benchmark.svg)
-
-Both modes abstained on all 240 lane-timestamps. Having tracks available did not establish a trustworthy queue count.
+Cropping yielded tracks at 33 additional lane-timestamps. Both modes withheld a queue estimate at all 240 lane-timestamps. The pilot shows where the detection pipeline recovered evidence and where that evidence was still insufficient for counting.
 
 ## Run the local workspace
 
