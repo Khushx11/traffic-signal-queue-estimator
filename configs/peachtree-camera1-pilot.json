@@ -1,0 +1,9 @@
+{
+  "provenance": "Manual marks on the 640x480 raw camera-1 preview. Ground coordinates approximate lane dimensions for a smoke test; they have not been surveyed.",
+  "image_anchors": [[342, 318], [386, 319], [411, 469], [355, 469]],
+  "ground_anchors": [[0, 0], [7, 0], [7, 42], [0, 42]],
+  "lanes": [
+    {"id":"near-inner","polygon":[[342,318],[365,319],[383,469],[355,469]],"stop":[353,318],"visible_end":[369,468]},
+    {"id":"near-outer","polygon":[[365,319],[386,319],[411,469],[383,469]],"stop":[375,319],"visible_end":[397,468]}
+  ]
+}
