@@ -1,0 +1,327 @@
+{
+  "kind": "synthetic track-state regression",
+  "methods": {
+    "without_recovery": {
+      "score": {
+        "eligible": 8,
+        "estimated": 7,
+        "coverage": 0.875,
+        "mae": 0.14285714285714285,
+        "bias": -0.14285714285714285,
+        "lower_bounds": 0,
+        "invalid_lower_bounds": 0
+      },
+      "coverage_curve": [
+        {
+          "threshold": 0,
+          "eligible": 8,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0.14285714285714285,
+          "bias": -0.14285714285714285,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        },
+        {
+          "threshold": 0.5,
+          "eligible": 8,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0.14285714285714285,
+          "bias": -0.14285714285714285,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        },
+        {
+          "threshold": 0.75,
+          "eligible": 8,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0.14285714285714285,
+          "bias": -0.14285714285714285,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        },
+        {
+          "threshold": 1,
+          "eligible": 8,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0.14285714285714285,
+          "bias": -0.14285714285714285,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        }
+      ],
+      "rows": [
+        {
+          "time": 0,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 0,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        },
+        {
+          "time": 1,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 1,
+          "state": "estimate",
+          "count": 1,
+          "visible_ids": [
+            1
+          ],
+          "recovered_ids": [],
+          "tail_distance": 6.5,
+          "confidence": 1.0
+        },
+        {
+          "time": 2,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 2,
+          "state": "estimate",
+          "count": 2,
+          "visible_ids": [
+            1,
+            2
+          ],
+          "recovered_ids": [],
+          "tail_distance": 13.5,
+          "confidence": 1.0
+        },
+        {
+          "time": 3,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 2,
+          "state": "estimate",
+          "count": 2,
+          "visible_ids": [
+            1,
+            2
+          ],
+          "recovered_ids": [],
+          "tail_distance": 13.5,
+          "confidence": 1.0
+        },
+        {
+          "time": 3.5,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 2,
+          "state": "uncertain",
+          "count": null,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 0.0
+        },
+        {
+          "time": 4,
+          "lane": "approach",
+          "phase": "green",
+          "reference": 1,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        },
+        {
+          "time": 5,
+          "lane": "approach",
+          "phase": "green",
+          "reference": 0,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        },
+        {
+          "time": 6,
+          "lane": "approach",
+          "phase": "green",
+          "reference": 0,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        }
+      ]
+    },
+    "with_recovery": {
+      "score": {
+        "eligible": 8,
+        "estimated": 8,
+        "coverage": 1.0,
+        "mae": 0.125,
+        "bias": -0.125,
+        "lower_bounds": 0,
+        "invalid_lower_bounds": 0
+      },
+      "coverage_curve": [
+        {
+          "threshold": 0,
+          "eligible": 8,
+          "estimated": 8,
+          "coverage": 1.0,
+          "mae": 0.125,
+          "bias": -0.125,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        },
+        {
+          "threshold": 0.5,
+          "eligible": 8,
+          "estimated": 8,
+          "coverage": 1.0,
+          "mae": 0.125,
+          "bias": -0.125,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        },
+        {
+          "threshold": 0.75,
+          "eligible": 8,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0.14285714285714285,
+          "bias": -0.14285714285714285,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        },
+        {
+          "threshold": 1,
+          "eligible": 8,
+          "estimated": 7,
+          "coverage": 0.875,
+          "mae": 0.14285714285714285,
+          "bias": -0.14285714285714285,
+          "lower_bounds": 0,
+          "invalid_lower_bounds": 0
+        }
+      ],
+      "rows": [
+        {
+          "time": 0,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 0,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        },
+        {
+          "time": 1,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 1,
+          "state": "estimate",
+          "count": 1,
+          "visible_ids": [
+            1
+          ],
+          "recovered_ids": [],
+          "tail_distance": 6.5,
+          "confidence": 1.0
+        },
+        {
+          "time": 2,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 2,
+          "state": "estimate",
+          "count": 2,
+          "visible_ids": [
+            1,
+            2
+          ],
+          "recovered_ids": [],
+          "tail_distance": 13.5,
+          "confidence": 1.0
+        },
+        {
+          "time": 3,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 2,
+          "state": "estimate",
+          "count": 2,
+          "visible_ids": [
+            1,
+            2
+          ],
+          "recovered_ids": [],
+          "tail_distance": 13.5,
+          "confidence": 1.0
+        },
+        {
+          "time": 3.5,
+          "lane": "approach",
+          "phase": "red",
+          "reference": 2,
+          "state": "estimate",
+          "count": 2,
+          "visible_ids": [
+            2
+          ],
+          "recovered_ids": [
+            1
+          ],
+          "tail_distance": 13.5,
+          "confidence": 0.65
+        },
+        {
+          "time": 4,
+          "lane": "approach",
+          "phase": "green",
+          "reference": 1,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        },
+        {
+          "time": 5,
+          "lane": "approach",
+          "phase": "green",
+          "reference": 0,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        },
+        {
+          "time": 6,
+          "lane": "approach",
+          "phase": "green",
+          "reference": 0,
+          "state": "estimate",
+          "count": 0,
+          "visible_ids": [],
+          "recovered_ids": [],
+          "tail_distance": null,
+          "confidence": 1.0
+        }
+      ]
+    }
+  }
+}
