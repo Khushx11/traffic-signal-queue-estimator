@@ -4,6 +4,7 @@ const element = (id) => document.getElementById(id);
 const video = element("video");
 const chart = element("chart");
 const context = chart.getContext("2d");
+const overlay = element("overlay");
 const lane = element("lane");
 const seek = element("seek");
 let records = [];
@@ -63,10 +64,33 @@ function render() {
   context.fillText("0 s", 40, 246);
   context.fillText(maxTime.toFixed(1) + " s", chart.width - 75, 246);
   const current = rows.reduce((nearest, row) => row.time <= now ? row : nearest, null);
+  paintOverlay(current);
   const estimate = current?.count == null ? "Uncertain" : current.count + (current.state === "lower_bound" ? "+ vehicles" : " vehicles");
   element("readout").textContent = current
     ? now.toFixed(1) + " s · " + estimate + (showReference && current.reference != null ? " · reference " + current.reference : "")
     : "No estimate at this timestamp";
+}
+
+function paintOverlay(row) {
+  overlay.width = overlay.clientWidth;
+  overlay.height = overlay.clientHeight;
+  if (!video.videoWidth || !row || !Array.isArray(row.tracks)) return;
+  const ctx = overlay.getContext("2d");
+  const ratio = Math.min(overlay.width / video.videoWidth, overlay.height / video.videoHeight);
+  const x = (overlay.width - video.videoWidth * ratio) / 2;
+  const y = (overlay.height - video.videoHeight * ratio) / 2;
+  ctx.translate(x, y);
+  ctx.scale(ratio, ratio);
+  ctx.font = "12px system-ui";
+  for (const track of row.tracks) {
+    if (!Array.isArray(track.box) || track.box.length !== 4 || !track.box.every(Number.isFinite)) continue;
+    const [x1, y1, x2, y2] = track.box;
+    const queued = row.visible_ids?.includes(track.id);
+    ctx.strokeStyle = ctx.fillStyle = queued ? "#7eedcb" : "#9ab2c9";
+    ctx.lineWidth = 2 / ratio;
+    ctx.strokeRect(x1, y1, x2 - x1, y2 - y1);
+    ctx.fillText(String(track.id), x1, y1 - 4);
+  }
 }
 
 function move(time) {
@@ -104,6 +128,7 @@ element("recording-file").addEventListener("change", event => {
   records = [];
   lane.replaceChildren();
   context.clearRect(0, 0, chart.width, chart.height);
+  paintOverlay(null);
   element("readout").textContent = "";
   element("source").textContent = "Local recording · awaiting predictions";
 });

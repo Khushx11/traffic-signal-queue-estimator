@@ -20,3 +20,6 @@ button { cursor: pointer; }
 :focus-visible { outline: 2px solid #7eedcb; outline-offset: 3px; }
 .readout { font-variant-numeric: tabular-nums; min-height: 1.5rem; }
 @media (max-width: 850px) { main { grid-template-columns: 1fr; } }
+
+#overlay { position: absolute; inset: 0; box-sizing: border-box; width: 100%; height: 100%; margin: 0; border: 0; pointer-events: none; }
+video { height: 100%; object-fit: contain; }

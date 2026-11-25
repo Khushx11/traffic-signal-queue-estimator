@@ -11,7 +11,7 @@
 <main>
 <section aria-labelledby="recording">
 <h2 id="recording">Recording</h2>
-<div class="stage"><video id="video" controls playsinline aria-label="Intersection recording"></video><div id="placeholder">Choose a local recording</div></div>
+<div class="stage"><video id="video" controls playsinline aria-label="Intersection recording"></video><canvas id="overlay" aria-hidden="true"></canvas><div id="placeholder">Choose a local recording</div></div>
 <div class="inputs">
 <label>Local recording <input id="recording-file" type="file" accept="video/*"></label>
 <label>Prediction JSON <input id="predictions" type="file" accept=".json,application/json"></label>
