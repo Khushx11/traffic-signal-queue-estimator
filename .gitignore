@@ -4,3 +4,7 @@ __pycache__/
 data/local/
 runs/
 .DS_Store
+
+node_modules/
+playwright-report/
+test-results/
