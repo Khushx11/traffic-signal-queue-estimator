@@ -4,13 +4,16 @@ from collections import defaultdict
 import csv
 import io
 import json
+import re
 from pathlib import Path
 import tarfile
 from zipfile import ZipFile
 
 from PIL import Image
 
-TRAFFIC = {"lmv", "hmv", "auto", "2w", "car", "bus", "truck", "motorcycle", "motorbike"}
+# Source annotations contain spelling and spacing variants for the same class.
+TRAFFIC = {"lmv", "lcv", "hmv", "auto", "2w", "car", "bus", "truck", "motorcycle",
+           "motorbike", "motor bike", "moterbike", "e-rickshaw", "tractor"}
 MIO = {"articulated_truck", "bus", "car", "motorcycle", "motorized_vehicle",
        "pickup_truck", "single_unit_truck", "work_van"}
 
@@ -49,14 +52,14 @@ def trafficcam(root, images, splits, per_video, train_per_video):
             raise ValueError("Official split contains a video shared across selected splits")
         for split, videos in groups.items():
             for video, paths in sorted(videos.items()):
-                paths.sort(key=lambda item: int(Path(item).name.removeprefix("frame")))
+                paths.sort(key=lambda item: (int(re.match(r"frame(\d+)", Path(item).name)[1]), item))
                 limit = train_per_video if split == "train" else per_video
                 stride = max(1, len(paths) // limit)
                 for path in paths[::stride][:limit]:
                     annotation = json.loads(archive.read(path + ".json"))
                     boxes = []
                     for shape in annotation["shapes"]:
-                        if shape["label"].lower() in TRAFFIC and len(shape["points"]) >= 2:
+                        if shape["label"].strip().lower() in TRAFFIC and len(shape["points"]) >= 2:
                             x, y = zip(*shape["points"])
                             boxes.append((min(x), min(y), max(x), max(y)))
                     write_example(root, split, video + "_" + Path(path).name, archive.read(path + ".jpg"), boxes)
