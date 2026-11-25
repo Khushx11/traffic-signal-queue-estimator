@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "complete_assets": [
+    {
+      "id": "peachtree-support",
+      "sha256": "91b9b1d4ed1d261e8c525df536adc466b6844ff49dc6fb08b815c735fe072a2f"
+    },
+    {
+      "id": "peachtree-camera1-0400pm-0415pm-raw",
+      "sha256": "d6678a36303f18897bc5177743b56c9b45785669ee461e6a81b2150b4c6de6fb",
+      "source_registry": "raw-collections.json"
+    }
+  ],
+  "local_inference": {
+    "weights": "yolo11n.pt",
+    "url": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt",
+    "sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1"
+  }
+}
