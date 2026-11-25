@@ -1,0 +1,50 @@
+{
+  "durationSeconds": 900,
+  "seed": 419,
+  "scenarios": {
+    "balanced": {
+      "fixed": {
+        "vehicleQueueSeconds": 43073,
+        "pedestrianQueueSeconds": 680,
+        "maxObservedPedestrianWait": 82,
+        "peakTotalQueue": 86,
+        "vehiclesDeparted": 225,
+        "pedestriansServed": 19,
+        "pedestrianBacklog": 0,
+        "vehicleBacklog": 86
+      },
+      "adaptive": {
+        "vehicleQueueSeconds": 34745,
+        "pedestrianQueueSeconds": 789,
+        "maxObservedPedestrianWait": 115,
+        "peakTotalQueue": 60,
+        "vehiclesDeparted": 258,
+        "pedestriansServed": 18,
+        "pedestrianBacklog": 1,
+        "vehicleBacklog": 53
+      }
+    },
+    "asymmetric": {
+      "fixed": {
+        "vehicleQueueSeconds": 80296,
+        "pedestrianQueueSeconds": 680,
+        "maxObservedPedestrianWait": 82,
+        "peakTotalQueue": 173,
+        "vehiclesDeparted": 204,
+        "pedestriansServed": 19,
+        "pedestrianBacklog": 0,
+        "vehicleBacklog": 173
+      },
+      "adaptive": {
+        "vehicleQueueSeconds": 56575,
+        "pedestrianQueueSeconds": 1134,
+        "maxObservedPedestrianWait": 133,
+        "peakTotalQueue": 109,
+        "vehiclesDeparted": 273,
+        "pedestriansServed": 17,
+        "pedestrianBacklog": 2,
+        "vehicleBacklog": 104
+      }
+    }
+  }
+}
