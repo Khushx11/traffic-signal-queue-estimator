@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "portal": "https://data.transportation.gov/api/views/8ect-6jqj",
+  "archives": [
+    {
+      "id": "lankershim-cam45",
+      "asset_id": "4b70c944-8b38-466a-b332-e10b8df92838",
+      "corridor": "Lankershim Boulevard",
+      "role": "development candidate"
+    },
+    {
+      "id": "peachtree-cam1234",
+      "asset_id": "31cf3bc5-3418-49ca-9269-e9fe85b9dd02",
+      "corridor": "Peachtree Street",
+      "role": "external test candidate"
+    },
+    {
+      "id": "peachtree-support",
+      "asset_id": "7244a8b5-077f-4851-bc06-3cfc7a75f0b0",
+      "corridor": "Peachtree Street",
+      "role": "external reference candidate"
+    }
+  ]
+}
