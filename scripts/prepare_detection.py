@@ -1,6 +1,7 @@
 """Build bounded, reproducible vehicle detection splits from publisher archives."""
 import argparse
 from collections import defaultdict
+from hashlib import sha256
 import csv
 import io
 import json
@@ -107,6 +108,13 @@ def main():
     manifest = {split: sorted(p.stem for p in (root / "images" / split).glob("*.jpg")) for split in splits}
     if any(not images for images in manifest.values()):
         raise ValueError("A requested split is empty")
+    previous_splits = set()
+    for split, images in manifest.items():
+        fingerprints = {sha256((root / "images" / split / (key + ".jpg")).read_bytes()).digest()
+                        for key in images}
+        if fingerprints & previous_splits:
+            raise ValueError(f"Exact duplicate images cross split boundaries at {split}")
+        previous_splits.update(fingerprints)
     (root / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print({split: len(images) for split, images in manifest.items()})
 
