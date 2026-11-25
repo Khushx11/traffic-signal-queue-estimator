@@ -26,4 +26,8 @@ test("runs actual inference via the local upload endpoint", async ({page}) => {
   expect(rows.length).toBeGreaterThan(1);
   expect(rows[0]).toMatchObject({lane: "fixture", recording: "local-upload", time: 0});
   expect(rows.every(row => row.count === null || Number.isInteger(row.count))).toBe(true);
+  if (process.env.QUEUE_COMPARE_WEIGHTS) {
+    expect(rows.every(row => row.model === "unanimous-consensus" && row.model_votes.length === 2)).toBe(true);
+    await expect(page.locator("#model-evidence")).toContainText("Model outputs");
+  }
 });
