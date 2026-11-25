@@ -13,6 +13,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from traffic_queue.estimator import Observation, QueueEstimator
 from traffic_queue.geometry import Lane, lane_at, project
 
+from traffic_queue.visibility import EmptyLaneEvidence
+
 VEHICLE_CLASSES = {"car", "motorcycle", "bus", "truck", "vehicle"}
 
 
@@ -45,6 +47,7 @@ def main():
         ):
             raise ValueError("Phase events require ordered timestamps, valid states and source provenance")
         phase_clocks[lane_id] = clock
+    reviewed_empty = EmptyLaneEvidence(camera.get("reviewed_empty", {}), {lane.id for lane in lanes})
     matrix = camera["image_to_ground"]
     if args.method == "tracking":
         lanes = [Lane(row["id"], tuple(map(tuple, row["image_polygon"])), tuple(row["image_stop"]),
@@ -121,12 +124,16 @@ def main():
                     evidence.append({"id": identity, "lane": lane.id, "box": box, "class": label,
                                      "distance": distance, "speed": speed if speed != float("inf") else None})
             history = {identity: history[identity] for identity in current}
-            states = estimator.update(timestamp, observations, obscured if args.method == "temporal" else ())
+            blocked = {item.lane for item in observations} | obscured
+            empty_sources = reviewed_empty.at(timestamp, blocked)
+            states = estimator.update(timestamp, observations, obscured if args.method == "temporal" else (),
+                                      observed_empty=empty_sources)
             for lane_id, state in states.items():
                 index = bisect_right(phase_clocks.get(lane_id, ()), timestamp) - 1
                 phase = phase_data[lane_id]["events"][index]["phase"] if index >= 0 else None
                 results.append({"recording": args.recording, "time": timestamp, "lane": lane_id, "model": f"{args.weights.name}/{args.method}" + ("/crop" if args.approach_crop else ""),
                                 "phase": phase, "phase_source": phase_data[lane_id]["source"] if phase else None,
+                                "empty_source": empty_sources.get(lane_id) if state["count"] == 0 else None,
                                 "tracks": [track for track in evidence if track["lane"] == lane_id], **state})
             frame_index += 1
     finally:

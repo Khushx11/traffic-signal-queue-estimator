@@ -49,8 +49,8 @@ class Workspace(SimpleHTTPRequestHandler):
             if "image_anchors" in camera:
                 try:
                     from calibrate import calibrate
-                    phases = camera.get("phase_events", {})
-                    camera = {**calibrate(camera), "phase_events": phases}
+                    evidence = {key: camera[key] for key in ("phase_events", "reviewed_empty") if key in camera}
+                    camera = {**calibrate(camera), **evidence}
                 except (KeyError, TypeError, ValueError, ImportError):
                     self.send_error(400, "Invalid camera layout")
                     return

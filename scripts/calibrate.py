@@ -34,7 +34,8 @@ def calibrate(layout):
             "image_polygon": pixels, "image_stop": stop, "image_upstream": image_upstream,
             "image_visible_distance": hypot(*image_upstream),
         })
-    return {"image_to_ground": matrix.tolist(), "lanes": lanes, "provenance": layout["provenance"]}
+    evidence = {key: layout[key] for key in ("phase_events", "reviewed_empty") if key in layout}
+    return {"image_to_ground": matrix.tolist(), "lanes": lanes, "provenance": layout["provenance"], **evidence}
 
 
 def main():
