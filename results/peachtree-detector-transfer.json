@@ -1,0 +1,26 @@
+{
+  "recording": "peachtree-cam1-pm",
+  "frames": 120,
+  "approach_crop": true,
+  "audited_count_reference": false,
+  "methods": {
+    "yolo11n": {
+      "lane_timestamps": 240,
+      "lane_timestamps_with_tracks": 176,
+      "tracked_boxes": 293,
+      "output_states": {
+        "uncertain": 240
+      }
+    },
+    "trafficcam-finetuned": {
+      "lane_timestamps": 240,
+      "lane_timestamps_with_tracks": 240,
+      "tracked_boxes": 1073,
+      "output_states": {
+        "uncertain": 152,
+        "lower_bound": 82,
+        "estimate": 6
+      }
+    }
+  }
+}
