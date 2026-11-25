@@ -18,3 +18,10 @@ development calibration file.
 
 See [the video pilot dependency versions](../requirements-video-pilot.txt) and
 [the camera setup](../configs/peachtree-camera1-pilot.json).
+
+A second completed run on the first 900 decoded frames of the complete
+Peachtree archive member took 59.15 seconds on the same CPU, or 15.2 frames
+per second. It produced 1,800 lane-timestamp rows across two lanes. The
+prototype issued an estimate for 1,758 rows and marked 42 uncertain. These
+are counts of output states before any accuracy audit. In particular, the
+high estimate coverage does not validate the confidence heuristic.

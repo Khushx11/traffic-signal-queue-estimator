@@ -51,3 +51,11 @@ At the inspected timestamps the signal heads were too small to verify
 movement-specific phases confidently from a still. Sample visibility and
 matching timing rows do not establish synchronisation or reference accuracy.
 Do not score these previews as complete cycles without the alignment audit.
+
+The complete Peachtree camera 1 raw member was extracted with ZIP integrity
+checking. Its SHA-256 is in the verified asset ledger. The container
+advertises 14,957 frames at a nominal 10 fps, which exceeds the 15-minute
+collection window in the catalogue. Preview frames in the corresponding
+processed recording show a rotated and resampled view. Treat any raw-frame
+to trajectory correspondence as provisional pending measured event alignment
+and confirmation of the effective trajectory and signal time ranges.
