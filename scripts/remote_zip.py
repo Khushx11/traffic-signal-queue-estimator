@@ -69,12 +69,15 @@ def main():
     parser.add_argument("--member")
     parser.add_argument("--output", type=Path)
     parser.add_argument("--preview-bytes", type=int)
+    parser.add_argument("--block-mib", type=int, default=4)
     args = parser.parse_args()
     if args.member and not args.output:
         parser.error("--member requires --output")
     if args.preview_bytes is not None and args.preview_bytes <= 0:
         parser.error("--preview-bytes must be positive")
-    with RemoteArchive(args.url) as source, ZipFile(source) as archive:
+    if not 1 <= args.block_mib <= 32:
+        parser.error("--block-mib must be between 1 and 32")
+    with RemoteArchive(args.url, args.block_mib * 1024 * 1024) as source, ZipFile(source) as archive:
         if not args.member:
             for item in archive.infolist():
                 print(f"{item.file_size:14d} {item.filename}")
