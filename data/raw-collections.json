@@ -1,0 +1,16 @@
+{
+  "lankershim": {
+    "collection": "uv3e-y54k",
+    "license": "CC BY-SA 4.0",
+    "bytes": 6860224646,
+    "url": "https://data.transportation.gov/api/views/uv3e-y54k/files/27fbaaac-d4b0-4b04-aacd-253d88f93ea8?download=true",
+    "pilot_member": "NGSIM Lankershim Videos/lankershim-camera5-0830am-0845am.avi"
+  },
+  "peachtree": {
+    "collection": "mupt-aksf",
+    "license": "CC BY-SA 4.0",
+    "bytes": 14759750051,
+    "url": "https://data.transportation.gov/api/views/mupt-aksf/files/e1b948c7-cdff-4308-9560-62fa5aa790bc?download=true",
+    "pilot_member": "NGSIM Peachtree Videos/peachtree-camera1-0400pm-0415pm.avi"
+  }
+}
