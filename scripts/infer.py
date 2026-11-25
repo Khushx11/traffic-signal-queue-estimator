@@ -19,6 +19,7 @@ def main():
     parser.add_argument("video", type=Path)
     parser.add_argument("camera", type=Path)
     parser.add_argument("output", type=Path)
+    parser.add_argument("--recording", required=True)
     parser.add_argument("--weights", type=Path, required=True)
     parser.add_argument("--method", choices=("tracking", "geometry", "temporal"), default="temporal")
     parser.add_argument("--max-frames", type=int)
@@ -85,7 +86,7 @@ def main():
             previous = current
             states = estimator.update(timestamp, observations, obscured if args.method == "temporal" else ())
             for lane_id, state in states.items():
-                results.append({"time": timestamp, "lane": lane_id, "model": f"{args.weights.name}/{args.method}",
+                results.append({"recording": args.recording, "time": timestamp, "lane": lane_id, "model": f"{args.weights.name}/{args.method}",
                                 "phase": None, "phase_source": None,
                                 "tracks": [track for track in evidence if track["lane"] == lane_id], **state})
             frame_index += 1
