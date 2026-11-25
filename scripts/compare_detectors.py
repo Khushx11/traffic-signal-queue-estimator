@@ -34,6 +34,9 @@ def variants(image):
     yield "blur", cv2.GaussianBlur(image, (15, 15), 4)
     yield "dark", cv2.convertScaleAbs(image, alpha=0.35)
     yield "low_resolution", cv2.resize(small, (width, height), interpolation=cv2.INTER_LINEAR)
+    occluded = image.copy()
+    occluded[height * 3 // 5:height * 3 // 4, width // 5:width * 4 // 5] = 64
+    yield "occlusion_strip", occluded
 
 
 def evaluate(model, root, split):
