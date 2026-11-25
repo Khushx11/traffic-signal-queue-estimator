@@ -74,3 +74,9 @@ conflict matrix or field operational claim. Compare against a calibrated
 SUMO model before drawing practical timing conclusions.
 
 - [Seeded policy results](../results/priority-policy-simulation.json)
+
+A third simulated variant prioritises waiting pedestrians once a
+45-second trigger is reached and the current vehicle phase has finished
+its all-red separation. The trigger does not interrupt an active phase.
+This variant is evaluated in the seeded comparison script. It is separate
+from the browser's one-snapshot priority preview.

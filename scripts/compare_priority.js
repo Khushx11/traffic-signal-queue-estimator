@@ -16,7 +16,7 @@ function arrivals(rates, seconds, seed) {
   }));
 }
 
-function run(input, threshold) {
+function run(input, threshold, pedestrianWaitTrigger = Infinity) {
   const queues = names.map(() => []);
   const pedestrians = [];
   let phase = null, remaining = 0, phases = [];
@@ -30,6 +30,10 @@ function run(input, threshold) {
       if (phases.length === 0) {
         phases = planIntersection(names.map((name, i) => ({name, minimum: queues[i].length})),
           pedestrians.length ? [{name: "Crosswalk", walk: 7, clearance: 14}] : [], threshold);
+      }
+      if (phase?.label === "All red" && pedestrians.length && time - pedestrians[0] >= pedestrianWaitTrigger
+          && phases[0].reason !== "Walk") {
+        phases.unshift(...planIntersection([], [{name: "Crosswalk", walk: 7, clearance: 14}], threshold));
       }
       phase = phases.shift();
       remaining = phase.seconds;
@@ -64,6 +68,6 @@ function run(input, threshold) {
 const outputs = {};
 for (const [name, rates] of Object.entries({balanced: [.08, .08, .08, .08], asymmetric: [.06, .22, .05, .08]})) {
   const input = arrivals(rates, 900, 419);
-  outputs[name] = {fixed: run(input, Infinity), adaptive: run(input, 10)};
+  outputs[name] = {fixed: run(input, Infinity), adaptive: run(input, 10), protectedAdaptive: run(input, 10, 45)};
 }
 process.stdout.write(JSON.stringify({durationSeconds: 900, seed: 419, scenarios: outputs}, null, 2) + "\n");

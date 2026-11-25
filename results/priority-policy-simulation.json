@@ -22,6 +22,16 @@
         "pedestriansServed": 18,
         "pedestrianBacklog": 1,
         "vehicleBacklog": 53
+      },
+      "protectedAdaptive": {
+        "vehicleQueueSeconds": 37131,
+        "pedestrianQueueSeconds": 607,
+        "maxObservedPedestrianWait": 73,
+        "peakTotalQueue": 69,
+        "vehiclesDeparted": 245,
+        "pedestriansServed": 19,
+        "pedestrianBacklog": 0,
+        "vehicleBacklog": 66
       }
     },
     "asymmetric": {
@@ -44,6 +54,16 @@
         "pedestriansServed": 17,
         "pedestrianBacklog": 2,
         "vehicleBacklog": 104
+      },
+      "protectedAdaptive": {
+        "vehicleQueueSeconds": 65336,
+        "pedestrianQueueSeconds": 633,
+        "maxObservedPedestrianWait": 72,
+        "peakTotalQueue": 136,
+        "vehiclesDeparted": 241,
+        "pedestriansServed": 19,
+        "pedestrianBacklog": 0,
+        "vehicleBacklog": 136
       }
     }
   }
