@@ -28,3 +28,17 @@ video { height: 100%; object-fit: contain; }
 .priority-panel textarea { display: block; margin: .4rem 0; width: min(100%, 32rem); }
 .priority-panel ol { font-variant-numeric: tabular-nums; columns: 2 18rem; }
 .priority-panel li { break-inside: avoid; padding-bottom: .25rem; }
+
+:root {background:#151918;color:#f3f2e7}
+header {border-bottom:4px dashed #e7c26e}
+header h1,#readout {font-family:ui-monospace,monospace}
+header h1 {letter-spacing:-.055em}
+section {border-color:#58635d}
+.stage {outline:1px solid #927c50;background:#080b0c}
+#source {color:#f0d29b}
+#analysis,#recording {scroll-margin-top:14px}
+.control-jumps {display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 0}
+.control-jumps a {color:#f0d29b;text-underline-offset:4px}
+.priority-panel {border-top:3px solid #c5a457}
+:focus-visible {outline:3px solid currentColor;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

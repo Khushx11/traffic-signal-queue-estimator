@@ -7,10 +7,10 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header><h1>Traffic Signal Queue Estimator</h1><p id="source">Illustrative fixture · simulated counts</p></header>
+<header><h1>Traffic Signal Queue Estimator</h1><p id="source">Illustrative fixture · simulated counts</p><nav class="control-jumps" aria-label="Control room sections"><a href="#recording">Recording</a><a href="#analysis">Queue analysis</a><a href="#priority-heading">Service simulation</a></nav></header>
 <main>
 <section aria-labelledby="recording">
-<h2 id="recording">Recording</h2>
+<h2 id="recording">Camera recording</h2>
 <div class="stage"><video id="video" controls playsinline aria-label="Intersection recording"></video><canvas id="overlay" aria-hidden="true"></canvas><div id="placeholder">Choose a local recording</div></div>
 <div class="inputs">
 <label>Local recording <input id="recording-file" type="file" accept="video/*"></label>
