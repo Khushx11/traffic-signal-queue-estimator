@@ -24,6 +24,12 @@ intersections.
   The supplied [synthetic fixture](fixtures/occlusion.json) exercises queue
   state transitions. Australian external validation is pending.
 
+## Guided replay
+
+The workspace opens with a clearly labelled synthetic cycle. Choose **Open queue replay**, select a lane, and scrub the playback position to inspect the count, signal phase and matching video frame. The chart has separate markers for estimates and reference counts. A plus sign marks a lower bound. Missing evidence remains uncertain.
+
+The **Camera** section accepts local footage with existing prediction JSON or a camera configuration for inference. **Signal simulation** previews an illustrative service sequence from the current queues. Custom lane assignments and pedestrian crossings are under **Custom approaches and crossings**.
+
 ## Run the local workspace
 
 Use Python 3.9 or later. The video dependency file records the versions used on

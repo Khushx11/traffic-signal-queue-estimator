@@ -6,6 +6,7 @@ test("loads sample, imports a recording and predictions, seeks and exports", asy
   await page.goto("/");
   await expect(page.locator("#source")).toContainText("Synthetic signal cycle");
   await expect(page.locator("#video")).toHaveJSProperty("videoWidth", 640);
+  await expect(page.locator("#phase-state")).toHaveText("Signal: red");
   const fixture = path.join(__dirname, "../web/illustrative-cycle");
   await page.locator("#recording-file").setInputFiles(fixture + ".mp4");
   await expect(page.getByRole("status")).toContainText("Local video loaded");
@@ -43,4 +44,18 @@ test("submits the selected recording and camera then loads the analysis", async 
   await page.getByRole("button", {name: "Run local inference"}).click();
   await expect(page.getByRole("status")).toHaveText("Analysis complete.");
   await expect(page.locator("#readout")).toContainText("3 vehicles");
+  await expect(page.locator("#phase-state")).toHaveText("Signal phase unavailable");
+});
+
+test("mobile navigation reaches the queue controls without horizontal scrolling", async ({page}) => {
+  await page.setViewportSize({width: 390, height: 844});
+  await page.goto("/");
+  await page.getByRole("link", {name: "Open queue replay"}).click();
+  await expect(page).toHaveURL(/#analysis$/);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  await expect(page.locator("#source")).toContainText("Synthetic signal cycle");
+  const slider = page.getByRole("slider", {name: "Playback position"});
+  await slider.focus();
+  await slider.press("End");
+  await expect(page.locator("#readout")).toContainText("6.0 s");
 });
