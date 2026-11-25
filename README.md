@@ -175,3 +175,21 @@ exclusive walk and clearance before vehicle movement. Amber, all-red,
 walk and clearance durations are illustrative. This is a snapshot-based
 priority comparison. It does not forecast arrivals, optimise successive
 cycles, or connect to a traffic controller.
+
+## Concurrent model comparison
+
+[Research and dataset inventory](docs/real-world-validation.md).
+Run the general detector and the five-epoch fixed-camera checkpoint on
+the same upload with independent trackers. An aerial checkpoint is available
+for overhead camera experiments. The review app
+shows each model's vote. The combined output abstains on disagreements
+and preserves the individual votes in JSON exports.
+
+```sh
+.venv/bin/python scripts/serve.py --weights data/local/yolo11n.pt \
+  --compare-weights runs/mixed-traffic-five/weights/mixed-five.pt
+```
+
+The mixed checkpoint trains on 240 TrafficCAM images plus 80 additional
+MIO-TCD images. See the [experiment guide](docs/real-world-validation.md#matched-model-comparison) for reproduction. Model comparison
+and priority replay run locally. Pedestrian calls still come from the reviewer.

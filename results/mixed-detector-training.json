@@ -86,5 +86,6 @@
   "trafficcam_test_images": 204,
   "mio_reserved_test_images": 80,
   "epochs": 2,
-  "checkpoint_sha256": "03dc5c768c14c78b423b2b03cd1a0b5c7b8f0e2190a1838b31fc2b068c67f897"
+  "checkpoint_sha256": "03dc5c768c14c78b423b2b03cd1a0b5c7b8f0e2190a1838b31fc2b068c67f897",
+  "five_epoch_checkpoint_sha256": "49944a5353df5ceff374fcd0092833f8b03ba7a55fbea0f65d3b3841b74837e4"
 }

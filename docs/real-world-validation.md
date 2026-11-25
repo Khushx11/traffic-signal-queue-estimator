@@ -80,3 +80,38 @@ A third simulated variant prioritises waiting pedestrians once a
 its all-red separation. The trigger does not interrupt an active phase.
 This variant is evaluated in the seeded comparison script. It is separate
 from the browser's one-snapshot priority preview.
+
+## Matched model comparison
+
+All checkpoints used the same 204 TrafficCAM test images, 80 MIO-TCD
+audit images, 0.25 confidence threshold, and five image conditions.
+The OBB model was scored with enclosing axis-aligned boxes for this
+comparison. Its overhead-view spot check remains separate.
+
+On original images the five-epoch mixed checkpoint reduced MIO-TCD
+count MAE from 1.30 to 0.81 versus the general detector. On TrafficCAM,
+it scored 10.18 versus 9.91 for the five-epoch TrafficCAM-only checkpoint.
+The two-epoch mixed checkpoint scored 49.46 and 14.04 respectively on
+TrafficCAM and MIO-TCD. The observed difference reflects the training
+budget and schedule as well as the added data. MIO-TCD test IDs are
+reserved, but source camera identities are unavailable and the mixed
+checkpoint trains on other MIO-TCD images. Its MIO-TCD score therefore
+measures transfer to reserved images within that dataset.
+
+To reproduce, follow the download instructions in the
+[detector experiment](detector-robustness.md), then run:
+
+```sh
+.venv/bin/python scripts/prepare_detection.py data/local/robustness-mixed \
+  --trafficcam data/local/trafficcam.zip data/local/trafficcam-splits.zip \
+  --mio data/local/mio-head.tar data/local/mio-code.tar --train-per-video 30 --mio-train 80
+.venv/bin/python scripts/finetune_detector.py data/local/yolo11n.pt \
+  data/local/robustness-mixed/dataset.yaml runs/mixed-traffic-five --epochs 5
+cp runs/mixed-traffic-five/weights/best.pt runs/mixed-traffic-five/weights/mixed-five.pt
+.venv/bin/python scripts/compare_detectors.py data/local/robustness-mixed \
+  runs/mixed-five-comparison.json runs/mixed-traffic-five/weights/mixed-five.pt
+```
+
+- [Original four-checkpoint comparison](../results/mixed-model-comparison.json)
+- [Five-epoch mixed comparison](../results/mixed-five-comparison.json)
+- [Reserved training manifest and checkpoint digests](../results/mixed-detector-training.json)
