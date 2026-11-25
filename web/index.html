@@ -21,6 +21,21 @@
 <button id="analyze" type="button">Run local inference</button>
 </div>
 <p id="status" role="status"></p>
+<details id="calibration">
+<summary>Mark camera geometry</summary>
+<p>Enter measured ground dimensions. Mark the four ground rectangle corners in order, then the lane’s four corners, stop point and visible upstream endpoint.</p>
+<div class="inputs">
+<label>Ground width (m) <input id="ground-width" type="number" min="0.1" step="any"></label>
+<label>Ground depth (m) <input id="ground-depth" type="number" min="0.1" step="any"></label>
+<label>Lane ID <input id="calibration-lane" value="lane-1"></label>
+</div>
+<div class="inputs">
+<button id="mark-camera" type="button">Mark on paused frame</button>
+<button id="undo-mark" type="button">Undo point</button>
+<button id="save-camera" type="button">Download camera JSON</button>
+</div>
+<p id="calibration-status" aria-live="polite"></p>
+</details>
 </section>
 <section aria-labelledby="analysis">
 <h2 id="analysis">Queue by lane</h2>

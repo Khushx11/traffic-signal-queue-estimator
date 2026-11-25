@@ -65,7 +65,7 @@ function render() {
   context.fillText("0 s", 40, 246);
   context.fillText(maxTime.toFixed(1) + " s", chart.width - 75, 246);
   const current = rows.reduce((nearest, row) => row.time <= now ? row : nearest, null);
-  paintOverlay(current);
+  if (!marking) paintOverlay(current);
   const estimate = current?.count == null ? "Uncertain" : current.count + (current.state === "lower_bound" ? "+ vehicles" : " vehicles");
   element("readout").textContent = current
     ? now.toFixed(1) + " s · " + estimate + (showReference && current.reference != null ? " · reference " + current.reference : "")
@@ -214,4 +214,92 @@ element("analyze").addEventListener("click", async () => {
   } finally {
     button.disabled = false;
   }
+});
+
+const calibrationStatus = element("calibration-status");
+const marks = [];
+let marking = false;
+
+function showMarks() {
+  overlay.width = overlay.clientWidth;
+  overlay.height = overlay.clientHeight;
+  const ctx = overlay.getContext("2d");
+  const ratio = Math.min(overlay.width / video.videoWidth, overlay.height / video.videoHeight);
+  const left = (overlay.width - video.videoWidth * ratio) / 2;
+  const top = (overlay.height - video.videoHeight * ratio) / 2;
+  ctx.fillStyle = "#7eedcb";
+  ctx.font = "14px system-ui";
+  marks.forEach(([x, y], i) => ctx.fillText(String(i + 1), left + x * ratio, top + y * ratio));
+  calibrationStatus.textContent = marks.length < 4
+    ? "Mark ground corner " + (marks.length + 1) + " of 4."
+    : marks.length < 8 ? "Mark lane corner " + (marks.length - 3) + " of 4."
+    : marks.length === 8 ? "Mark the stop point."
+    : marks.length === 9 ? "Mark the upstream endpoint."
+    : "Ten points marked. Download the camera JSON.";
+}
+
+element("mark-camera").addEventListener("click", () => {
+  if (!video.videoWidth || !element("recording-file").files.length) {
+    calibrationStatus.textContent = "Load a local recording before marking its camera geometry.";
+    return;
+  }
+  video.pause();
+  marks.length = 0;
+  marking = true;
+  overlay.style.pointerEvents = "auto";
+  overlay.style.cursor = "crosshair";
+  showMarks();
+});
+
+overlay.addEventListener("click", event => {
+  if (!marking || marks.length === 10) return;
+  const bounds = overlay.getBoundingClientRect();
+  const scale = Math.min(bounds.width / video.videoWidth, bounds.height / video.videoHeight);
+  const x = (event.clientX - bounds.left - (bounds.width - video.videoWidth * scale) / 2) / scale;
+  const y = (event.clientY - bounds.top - (bounds.height - video.videoHeight * scale) / 2) / scale;
+  if (x < 0 || y < 0 || x >= video.videoWidth || y >= video.videoHeight) return;
+  marks.push([Math.round(x), Math.round(y)]);
+  showMarks();
+});
+
+element("undo-mark").addEventListener("click", () => {
+  if (!marking) return;
+  marks.pop();
+  showMarks();
+});
+
+element("save-camera").addEventListener("click", () => {
+  const width = Number(element("ground-width").value);
+  const depth = Number(element("ground-depth").value);
+  const id = element("calibration-lane").value.trim();
+  if (marks.length !== 10 || new Set(marks.slice(0, 4).map(String)).size !== 4 ||
+      new Set(marks.slice(4, 8).map(String)).size !== 4 || String(marks[8]) === String(marks[9]) ||
+      !Number.isFinite(width) || !Number.isFinite(depth) || width <= 0 || depth <= 0 || !id) {
+    calibrationStatus.textContent = "Provide distinct points, measured dimensions and a lane ID.";
+    return;
+  }
+  const layout = {
+    provenance: "Operator-marked reference frame at " + video.currentTime.toFixed(3) + " s",
+    image_anchors: marks.slice(0, 4),
+    ground_anchors: [[0, 0], [width, 0], [width, depth], [0, depth]],
+    lanes: [{id, polygon: marks.slice(4, 8), stop: marks[8], visible_end: marks[9]}],
+  };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(layout, null, 2)], {type: "application/json"}));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "camera-layout.json";
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  marking = false;
+  overlay.style.pointerEvents = "";
+  overlay.style.cursor = "";
+  calibrationStatus.textContent = "Camera layout downloaded. Choose it under Camera configuration to run inference.";
+});
+
+element("recording-file").addEventListener("change", () => {
+  marking = false;
+  marks.length = 0;
+  overlay.style.pointerEvents = "";
+  overlay.style.cursor = "";
+  calibrationStatus.textContent = "";
 });
