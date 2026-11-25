@@ -1,67 +1,85 @@
 # Traffic Signal Queue Estimator
 
-This project investigates whether lane geometry and temporal tracking improve
-fixed-camera queue counts at unseen signalised intersections, especially under
-occlusion.
+A local research prototype for estimating per-lane queues from fixed-camera
+recordings of signalised intersections. The research question is whether lane
+geometry and temporal tracking improve counts under occlusion at unseen
+intersections.
 
-## Current evidence
+**Current result.** The raw Peachtree pilot exposed a detector coverage failure.
+The original run emitted 1,758 zero counts despite visible queues. The revised
+pipeline reports insufficient evidence as uncertain. Both full-frame and
+approach-cropped inference abstained on all 240 lane-timestamps in the same
+120-frame follow-up. Cropping increased the number of lane-timestamps with
+tracks from 143 to 176, but it did not recover a trustworthy stop-line-connected
+queue. See the [audit follow-up](docs/smoke-test.md). Real-world count accuracy
+and Australian external validation remain unverified.
 
-The FHWA data pilot is in progress. The project currently includes a download
-manifest, archive checks, lane geometry, and evaluation foundations.
-See the [data audit](docs/data-pilot.md) for verified archive contents and open
-alignment checks. There are no real-world benchmark scores yet.
+## Run the local workspace
 
-## Reproduce the current checks
+Use Python 3.9 or later. The video dependency file records the versions used on
+an Apple Silicon Mac. The browser viewer also works without the model through
+a static server.
 
 ```sh
-python3 scripts/audit_sources.py --download > pilot-inventory.json
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-video-pilot.txt
+mkdir -p data/local runs
+curl -fL https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt \
+  -o data/local/yolo11n.pt
+.venv/bin/python scripts/serve.py --weights data/local/yolo11n.pt
+```
+
+Open `http://127.0.0.1:8000`. Review the synthetic sample, or select a
+browser-playable local recording and its matching camera JSON, then choose
+**Run local inference**. The loopback server accepts the original camera
+layout or the compiled configuration. Videos stay on the local machine.
+The review workspace also accepts existing prediction JSON and exports CSV/JSON.
+Mark lane polygons, stop points and four matching image/ground anchors in
+a layout JSON such as [the Peachtree example](configs/peachtree-camera1-pilot.json).
+The example applies to the original 640 × 480 camera view and uses approximate
+ground dimensions.
+
+For viewer-only use, run
+`python3 -m http.server --bind 127.0.0.1 --directory web 8000`.
+If a raw FHWA AVI cannot play in the browser, transcode it locally to MP4
+without changing the camera geometry or frame cadence.
+
+## Reproduce the FHWA pilot
+
+```sh
+python3 scripts/download_raw.py data/local/peachtree-cam1.avi
+.venv/bin/python scripts/calibrate.py configs/peachtree-camera1-pilot.json runs/camera.json
+.venv/bin/python scripts/infer.py data/local/peachtree-cam1.avi runs/camera.json \
+  runs/peachtree.json --recording peachtree-cam1-pm \
+  --weights data/local/yolo11n.pt --max-frames 120
+```
+
+The raw downloader retrieves the exact Peachtree recording and checks ZIP
+integrity and SHA-256. See [source and licence notes](docs/data-pilot.md) and
+[the asset ledger](data/verified-assets.json). The original archive inventory
+tool is intended for processed/reference assets. Processed footage contains
+baked-in vehicle annotations and belongs outside detector input.
+
+Use `--approach-crop` for the diagnostic crop. Pass `--phase-events` only
+after verifying alignment. A phase file maps each lane to an object with a
+`source` and an ordered `events` list. Each event has recording-relative
+`time` in seconds and `phase` set to red, amber, green or null. No phase is
+shown before the first event.
+
+## Evaluation and tests
+
+```sh
 python3 -m unittest discover -s tests -v
+python3 scripts/run_fixture.py fixtures/occlusion.json
+python3 scripts/evaluate.py audited-reference.json runs/peachtree.json --split test
+npm ci
+npx playwright install chromium
+npm test
 ```
 
-The archive command stores downloads under `data/local/` by default and emits
-SHA-256 hashes and member lists. Python 3.9 or later is sufficient for these checks.
-
-## Review workspace
-
-Run `python3 -m http.server --bind 127.0.0.1 --directory web 8000` and open
-`http://127.0.0.1:8000`. The workspace starts with an illustrative count
-timeline. Load a browser-playable local video, then the matching prediction
-JSON. Use the chart or keyboard-accessible range control to seek and export
-the imported rows in CSV or JSON.
-
-## Local detector prototype
-
-Install OpenCV and Ultralytics in a virtual environment. Supply a compatible
-pretrained detection checkpoint under its own usage terms. The inference CLI
-runs separately from the review workspace.
-
-```sh
-python3 scripts/infer.py recording.mp4 camera.json predictions.json \
-  --recording collection-camera-window --weights local-model.pt --method temporal
-python3 scripts/evaluate.py audited-reference.json predictions.json --split test
-```
-
-The camera configuration requires a pixel-to-ground homography and one
-polygon, stop point, upstream vector and visible distance per lane. Include
-the corresponding pixel-space lane fields for the tracking baseline. The
-temporal occlusion indicator currently uses a heavy-vehicle heuristic and
-the confidence values are provisional. Benchmark joins expect explicit
-recording IDs, lane IDs, common timestamps, and independently audited labels.
-
-## Verified checks and remaining benchmark work
-
-- [Real-video smoke test](docs/smoke-test.md) documents a completed Mac CPU
-  run. It used raw footage and a provisional camera layout.
-- [Synthetic recovery experiment](results/synthetic-recovery.json) provides
-  raw predictions and metrics for a controlled track-state example. Regenerate
-  with `python3 scripts/run_fixture.py fixtures/occlusion.json`.
-- [Reference protocol](docs/annotation.md) defines the queue and its
-  visibility categories. [Verified assets](data/verified-assets.json)
-  records available file hashes.
-- Browser test: `npm ci && npx playwright install chromium && npm test`.
-  The test loads the bundled video, imports the recording and predictions,
-  uses the keyboard to seek, and verifies CSV and JSON downloads.
-
-The real-data benchmark still needs independently checked alignment and complete
-cycle labels. The synthetic video is an original rendering and can be opened
-offline from the local server. Australian evaluation depends on qualifying footage.
+Follow the [reference protocol](docs/annotation.md) when preparing benchmark
+data. Cycle peak scoring requires verifying the cycle bounds and providing
+every expected timestamp. No audited real-data reference file is bundled.
+The [synthetic recovery results](results/synthetic-recovery.json) exercise
+queue state transitions in isolation. The browser tests exercise the
+synthetic sample, import, seeking, exports and the upload request flow.
