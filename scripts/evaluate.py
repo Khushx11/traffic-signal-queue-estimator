@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from traffic_queue.evaluation import coverage_curve, score, subgroup_scores, validate_split
+from traffic_queue.evaluation import coverage_curve, cycle_peaks, score, subgroup_scores, validate_split
 
 
 def key(row):
@@ -46,6 +46,7 @@ def main():
     report = {
         "split": args.split,
         "overall": score(rows),
+        "cycle_peak": cycle_peaks(rows),
         "intersection": subgroup_scores(rows, "intersection"),
         "occlusion": subgroup_scores(rows, "occlusion"),
         "phase": subgroup_scores(rows, "phase"),

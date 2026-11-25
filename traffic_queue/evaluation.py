@@ -41,3 +41,17 @@ def validate_split(records):
     leaked = sorted(site for site, splits in by_intersection.items() if len(splits) > 1)
     if leaked:
         raise ValueError("Intersection split overlap: " + ", ".join(leaked))
+
+
+def cycle_peaks(rows):
+    """Report peak error for fully covered, independently verified lane cycles."""
+    groups = defaultdict(list)
+    for row in rows:
+        if row.get("cycle") is not None:
+            groups[row["recording"], row["lane"], row["cycle"]].append(row)
+    errors = []
+    for group in groups.values():
+        if all(row["reference"] is not None and row["state"] == "estimate" for row in group):
+            errors.append(max(row["count"] for row in group) - max(row["reference"] for row in group))
+    return {"cycles": len(groups), "scored_cycles": len(errors),
+            "mae": mean(map(abs, errors)) if errors else None}
