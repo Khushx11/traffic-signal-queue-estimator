@@ -28,9 +28,9 @@ intersections.
 
 Scrub the bundled synthetic intersection replay and run the four-approach signal simulation.
 
-[Watch the 13-second captioned walkthrough](https://raw.githubusercontent.com/Khushx11/traffic-signal-queue-estimator/main/docs/demo/walkthrough.mp4)
+[Watch the 26-second captioned walkthrough](https://raw.githubusercontent.com/Khushx11/traffic-signal-queue-estimator/main/docs/demo/walkthrough.mp4)
 
-[![Traffic Signal Queue Estimator intersection illustration and queue workspace](docs/demo/preview.png)](https://raw.githubusercontent.com/Khushx11/traffic-signal-queue-estimator/main/docs/demo/walkthrough.mp4)
+[![Traffic Signal Queue Estimator showing the camera frame, red phase and two queued vehicles](docs/demo/preview.png)](https://raw.githubusercontent.com/Khushx11/traffic-signal-queue-estimator/main/docs/demo/walkthrough.mp4)
 
 The workspace opens with a clearly labelled synthetic cycle. Choose **Open queue replay**, select a lane, and scrub the playback position to inspect the count, signal phase and matching video frame. The chart has separate markers for estimates and reference counts. A plus sign marks a lower bound. Missing evidence remains uncertain.
 
