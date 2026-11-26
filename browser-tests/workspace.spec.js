@@ -57,5 +57,9 @@ test("mobile navigation reaches the queue controls without horizontal scrolling"
   const slider = page.getByRole("slider", {name: "Playback position"});
   await slider.focus();
   await slider.press("End");
+  await expect.poll(() => page.locator("#video").evaluate(video =>
+    !video.seeking && video.currentTime >= 5.9
+  )).toBe(true);
   await expect(page.locator("#readout")).toContainText("6.0 s");
+  await expect(page.locator("#phase-state")).toHaveText("Signal: green");
 });

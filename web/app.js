@@ -187,13 +187,22 @@ for (const format of ["csv", "json"]) {
 }
 async function loadSample() {
   try {
-    const response = await fetch("illustrative-cycle.json");
-    if (!response.ok) throw new Error("Sample unavailable");
-    load(await response.json(), "Synthetic signal cycle · track-state fixture");
-    video.src = "illustrative-cycle.mp4";
+    const [predictions, recording] = await Promise.all([
+      fetch("illustrative-cycle.json"),
+      fetch("illustrative-cycle.mp4"),
+    ]);
+    if (!predictions.ok || !recording.ok) throw new Error("Sample unavailable");
+    const [sampleRows, sampleVideo] = await Promise.all([predictions.json(), recording.blob()]);
+    if (objectUrl) return;
+    if (!records.length) load(sampleRows, "Synthetic signal cycle · track-state fixture");
+
+    // Serve the small bundled recording from memory so seeking works on static
+    // servers that respond to byte-range requests with the entire file.
+    objectUrl = URL.createObjectURL(sampleVideo);
+    video.src = objectUrl;
     element("placeholder").hidden = true;
   } catch (error) {
-    element("status").textContent = error.message;
+    if (!objectUrl) element("status").textContent = error.message;
   }
 }
 
